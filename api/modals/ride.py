@@ -1,8 +1,10 @@
 from pprint import pprint
-from api.db import DataBaseConnection
+from api.database.database import DataBaseConnection
 
 
 class Ride:
+    connection = DataBaseConnection()
+
     def __init__(self, ride_id, user_id, origin, destination, departure_time, slots, description):
         self.ride_id = ride_id
         self.user_id = user_id
@@ -20,10 +22,9 @@ class Ride:
                       """
         try:
             # create connection and set cursor
-            connection = DataBaseConnection()
-            cursor = connection.cursor
-            cursor.execute(query_string, (ride.user_id, ride.origin, ride.destination,
-                                          ride.departure_time, ride.slots, ride.description))
+
+            Ride.connection.cursor.execute(query_string, (ride.user_id, ride.origin, ride.destination,
+                                           ride.departure_time, ride.slots, ride.description))
         except Exception as exp:
             pprint(exp)
 
@@ -33,8 +34,7 @@ class Ride:
                      SELECT * FROM rides
                      """
         try:
-            connection = DataBaseConnection()
-            cursor = connection.dict_cursor
+            cursor = Ride.connection.dict_cursor
             cursor.execute(query_string)
             return cursor.fetchmany()
 
@@ -47,8 +47,8 @@ class Ride:
         query_string = "SELECT * FROM rides WHERE ride_id = %s "
 
         try:
-            connection = DataBaseConnection()
-            cursor = connection.cursor
+
+            cursor = Ride.connection.cursor
             cursor.execute(query_string, [ride_id])
             return cursor.fetchone()
 
@@ -61,8 +61,8 @@ class Ride:
         query_string = "INSERT INTO ride_requests (ride_id,user_id,status) VALUES (?,?,?)"
 
         try:
-            connection = DataBaseConnection()
-            cursor = connection.cursor
+
+            cursor = Ride.connection.cursor
             cursor.execute(query_string, (ride_id, user_id, "pending"))
             return 1
 
@@ -75,8 +75,8 @@ class Ride:
             """
 
         try:
-            connection = DataBaseConnection()
-            dict_cursor = connection.dict_cursor
+
+            dict_cursor = Ride.connection.dict_cursor
             dict_cursor.execute(my_requests, self.user_id)
             requests = dict_cursor.fetchmany()
             return requests
@@ -88,8 +88,8 @@ class Ride:
         """
 
         try:
-            connection = DataBaseConnection()
-            dict_cursor = connection.dict_cursor
+
+            dict_cursor = Ride.connection.dict_cursor
             dict_cursor.execute(my_offers, [self.user_id])
             offers = dict_cursor.fetchmany()
             return offers

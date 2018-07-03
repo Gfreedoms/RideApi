@@ -1,5 +1,4 @@
 from api.modals.user import User
-from api.db import DataBaseConnection
 from flask_restful import Resource, reqparse
 
 
@@ -13,12 +12,8 @@ class LoginUser(Resource):
         parser.add_argument('password', type=str, required=True, help="Password field is required")
 
         data = parser.parse_args()
-        
-        # create connection and set cursor
-        connection = DataBaseConnection()
-        dict_cursor = connection.dict_cursor
 
-        user_data = User.get_user_by_email(dict_cursor, data["email"])
+        user_data = User.get_user_by_email(data["email"])
 
         if user_data:
             # find if the user passwords match
