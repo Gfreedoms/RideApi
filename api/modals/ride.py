@@ -43,12 +43,12 @@ class Ride:
             return None
 
     @staticmethod
-    def check_ride_id(ride_id):
+    def get_ride(ride_id):
         query_string = "SELECT * FROM rides WHERE ride_id = %s "
 
         try:
 
-            cursor = Ride.connection.cursor
+            cursor = Ride.connection.dict_cursor
             cursor.execute(query_string, [ride_id])
             return cursor.fetchone()
 

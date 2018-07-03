@@ -9,7 +9,7 @@ class User:
 
     """User class defines the methods needed by user and the attributes.
         on creation pass in id,name,email,password"""
-    def __init__(self, _id, name, email, password,confirm):
+    def __init__(self, _id, name, email, password, confirm):
         self.id = _id
         self.name = name
         self.email = email
