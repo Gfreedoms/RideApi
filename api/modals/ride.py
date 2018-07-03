@@ -43,12 +43,12 @@ class Ride:
             return None
 
     @staticmethod
-    def check_ride_id(ride_id):
+    def get_ride(ride_id):
         query_string = "SELECT * FROM rides WHERE ride_id = %s "
 
         try:
 
-            cursor = Ride.connection.cursor
+            cursor = Ride.connection.dict_cursor
             cursor.execute(query_string, [ride_id])
             return cursor.fetchone()
 
@@ -58,13 +58,12 @@ class Ride:
 
     @staticmethod
     def create_ride_request(ride_id, user_id):
-        query_string = "INSERT INTO ride_requests (ride_id,user_id,status) VALUES (?,?,?)"
+        query_string = "INSERT INTO ride_requests (ride_id,user_id,status) VALUES (%s,%s,%s)"
 
         try:
 
-            cursor = Ride.connection.cursor
-            cursor.execute(query_string, (ride_id, user_id, "pending"))
-            return 1
+            Ride.connection.cursor.execute(query_string, (ride_id, user_id, "pending"))
+            return True
 
         except Exception as exp:
             pprint(exp)

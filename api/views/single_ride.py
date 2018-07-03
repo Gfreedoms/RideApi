@@ -1,6 +1,5 @@
 from api.modals.user import User
 from api.modals.ride import Ride
-from api.settings.config import rideslist
 from flask import request
 from flask_restful import Resource, reqparse
 from flask_jwt import jwt_required
@@ -9,17 +8,29 @@ from flask_jwt import jwt_required
 class SingleRide(Resource):
     """class SingleRide extends Resource class methods get
      which returns a given ride, post for creating a ride offer"""
-    # @jwt_required
+    # @jwt_required()
     def get(self, ride_id):
         """returns a ride matching a given id"""
 
-        ride = [temp_ride for temp_ride in rideslist if temp_ride["id"] == ride_id]
-        if ride:
-            return {"status": "success", "ride": ride, "message": "ride found"}, 200
-            
-        return {"status": "fail", "message": "Ride Not Found"}, 404
+        header_token = request.headers.get('Authorization')
+        if header_token:
+            user_token = header_token.split(" ")[1]
+            user_id = User.decode_authentication_token(user_token)
 
-    # @jwt_required
+            if isinstance(user_id, int):
+                row = Ride.get_ride(ride_id)
+
+                if row:
+                    ride = Ride(row["ride_id"], row["user_id"], row["origin"], row["destination"],
+                                row["departure_time"].strftime("%Y-%m-%d %H:%M:%S"), row["slots"], row["description"])
+
+                    return {"status": "success", "ride": ride.__dict__}, 201
+                else:
+                    return {"status": "success", "message": "ride not found"}, 404
+
+        return {"status": "fail", "message": "unauthorised access"}, 401
+
+    # @jwt_required()
     def post(self):
         """creates a new ride offer"""
         parser = reqparse.RequestParser()

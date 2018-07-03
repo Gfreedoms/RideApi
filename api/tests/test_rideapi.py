@@ -23,7 +23,8 @@ class TestRide(unittest.TestCase):
 
     def test_register_user(self):
         # register user
-        register_response = helpers.register_user(self,"stephen","sample1@mail.com","123","123")
+        register_response = helpers.register_user(self, "stephen", "sample1@mail.com",
+                                                  "123", "123")
         data = json.loads(register_response.data.decode())
         
         # test response data
@@ -33,7 +34,8 @@ class TestRide(unittest.TestCase):
 
     def test_register_mismatch_password(self):
         # register user
-        register_response = helpers.register_user(self,"stephen","sampleab@mail.com","123","34e")
+        register_response = helpers.register_user(self, "stephen", "sampleab@mail.com",
+                                                  "123", "34e")
         data = json.loads(register_response.data.decode())
         
         # test response data
@@ -65,7 +67,8 @@ class TestRide(unittest.TestCase):
     def test_login_invalid_credentials(self):
 
         # register 1 users
-        user_response = helpers.register_user(self,"stephen","samplesss@mail.com","123","123")
+        user_response = helpers.register_user(self, "stephen", "samplesss@mail.com",
+                                              "123", "123")
         user_data = json.loads(user_response.data.decode())
 
         # test register
@@ -74,7 +77,7 @@ class TestRide(unittest.TestCase):
         self.assertEqual(user_response.status_code, 201)
 
         # attempt to login user but with wrong password
-        login_response = helpers.login_user(self,"samplesss@mail.com","fsd")
+        login_response = helpers.login_user(self, "samplesss@mail.com", "fsd")
         login_data = json.loads(login_response.data.decode())
 
         # test login to a user that has been created on register at the start of the method
@@ -83,7 +86,8 @@ class TestRide(unittest.TestCase):
     
     def test_post_ride_offer(self):
         # register user
-        register_response = helpers.register_user(self,"stephen","sample2@mail.com","123","123")
+        register_response = helpers.register_user(self, "stephen", "sample2@mail.com",
+                                                  "123", "123")
         data = json.loads(register_response.data.decode())
         
         # test register response data 
@@ -92,8 +96,9 @@ class TestRide(unittest.TestCase):
         self.assertEqual(register_response.status_code, 201)
 
         # use user's token to register an offer
-        post_ride_response=helpers.post_ride_offer(self,data["auth_token"],"masaka","mbale","2018-06-10 13:00",3,"This is just a sample request");
-        post_ride_data=json.loads(post_ride_response.data.decode())
+        post_ride_response = helpers.post_ride_offer(self, data["auth_token"], "masaka", "mbale",
+                                                     "2018-06-10 13:00", 3, "This is just a sample request");
+        post_ride_data = json.loads(post_ride_response.data.decode())
         
         # test response data
         self.assertTrue(post_ride_data["status"] == "success")
@@ -101,12 +106,15 @@ class TestRide(unittest.TestCase):
 
     def test_get_all_rides(self):
         # register user 
-        register_response = helpers.register_user(self,"stephen","sample3@mail.com","123","123")
+        register_response = helpers.register_user(self, "stephen", "sample3@mail.com",
+                                                  "123", "123")
         data = json.loads(register_response.data.decode())
         
-        # register atleast 2 rides using users token
-        helpers.post_ride_offer(self,data["auth_token"],"masaka","mbale","2018-06-10 13:00",3,"This is just a sample request");
-        helpers.post_ride_offer(self,data["auth_token"],"masaka","mbale","2018-06-10 13:00",3,"This is just a sample request");
+        # register at least 2 rides using users token
+        helpers.post_ride_offer(self, data["auth_token"], "masaka", "mbale",
+                                "2018-06-10 13:00", 3, "This is just a sample request")
+        helpers.post_ride_offer(self, data["auth_token"], "masaka", "mbale",
+                                "2018-06-10 13:00", 3, "This is just a sample request")
         
         # fetch the rides
         get_rides_response = helpers.get_all_rides(self)
