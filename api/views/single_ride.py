@@ -1,6 +1,5 @@
 from api.modals.user import User
 from api.modals.ride import Ride
-from api.settings.config import rideslist
 from flask import request
 from flask_restful import Resource, reqparse
 from flask_jwt import jwt_required
@@ -9,7 +8,7 @@ from flask_jwt import jwt_required
 class SingleRide(Resource):
     """class SingleRide extends Resource class methods get
      which returns a given ride, post for creating a ride offer"""
-    # @jwt_required
+    # @jwt_required()
     def get(self, ride_id):
         """returns a ride matching a given id"""
 
@@ -31,7 +30,7 @@ class SingleRide(Resource):
 
         return {"status": "fail", "message": "unauthorised access"}, 401
 
-    # @jwt_required
+    # @jwt_required()
     def post(self):
         """creates a new ride offer"""
         parser = reqparse.RequestParser()
