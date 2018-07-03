@@ -28,14 +28,14 @@ def request_ride_join(self, ride_id, auth_token):
                          content_type='application/json')
 
 
-def post_ride_offer(self, user_token, ride_from, ride_to, dept_date, ride_time, slots, description):
+def post_ride_offer(self, user_token, ride_from, ride_to, dept_date, slots, description):
     """method post_ride_offer sends a request for registering a ride
        parameters users_token,from,to,date,time,slots,description
        returns json response"""
 
     return self.app.post('/api/v1/rides', headers=dict(Authorization='jwt '+user_token),
-                         data=json.dumps(dict(origin=ride_from, destination=ride_to, dept_date=dept_date,
-                                              dept_time=ride_time, slots=slots, description=description)),
+                         data=json.dumps(dict(origin=ride_from, destination=ride_to, departure_time=dept_date,
+                                              slots=slots, description=description)),
                          content_type='application/json')
 
 

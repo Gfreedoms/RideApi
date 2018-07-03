@@ -1,10 +1,12 @@
 import datetime
 import jwt
-
+from api.database.database import DataBaseConnection
 from api.settings import config
 
 
 class User:
+    connection = DataBaseConnection()
+
     """User class defines the methods needed by user and the attributes.
         on creation pass in id,name,email,password"""
     def __init__(self, _id, name, email, password,confirm):
@@ -40,20 +42,22 @@ class User:
             return "Invalid token. Please Login Again"
     
     @staticmethod
-    def create_user(cursor, name, email, password):
+    def create_user(name, email, password):
+        cursor = User.connection.cursor
         query_string = "INSERT INTO users (name,email,password) VALUES (%s,%s,%s)"
         cursor.execute(query_string, (name, email, password))
     
     @staticmethod   
-    def get_user_by_email(dict_cursor, email):
-
+    def get_user_by_email(email):
+        cursor = User.connection.dict_cursor
         query_string = "SELECT * FROM users WHERE email = %s "
-        dict_cursor.execute(query_string, [email])
-        row = dict_cursor.fetchone()
+        cursor.execute(query_string, [email])
+        row = cursor.fetchone()
         return row
     
     @staticmethod
-    def get_all_users(dict_cursor):
+    def get_all_users():
+        cursor = User.connection.dict_cursor
         query_string = "SELECT * FROM users"
-        dict_cursor.execute(query_string)
-        return dict_cursor.fetchall()
+        cursor.execute(query_string)
+        return cursor.fetchall()

@@ -4,18 +4,19 @@ from pprint import pprint
 
 
 class DataBaseConnection:
-    def __init__(self):
+    def __init__(self, database="myway"):
         try:
-            self.connection = psycopg2.connect(database="myway", user="postgres", password="", host="localhost", port="5432")
+            self.connection = psycopg2.connect(database=database, user="postgres", password="", host="localhost", port="5432")
             self.connection.autocommit = True
             self.cursor = self.connection.cursor()
             self.dict_cursor = self.connection.cursor(cursor_factory=extra.DictCursor)
+
         except Exception as exp:
             pprint(exp)
 
     def create_tables(self):
         # status pending,approved, rejected
-        queries=(
+        queries = (
             """
             CREATE TABLE IF NOT EXISTS users (
                 user_id SERIAL PRIMARY KEY,
@@ -77,9 +78,33 @@ class DataBaseConnection:
             )
             """
         )
+        # create all tables
         for query in queries:
             self.cursor.execute(query)
-        
+
+    def drop_test_tables(self):
+        queries = ("""
+                DROP TABLE IF EXISTS users cascade 
+                """,
+                """
+                DROP TABLE IF EXISTS rides cascade
+                """,
+                """
+                DROP TABLE IF EXISTS ride_requests cascade
+                """,
+                """
+                DROP TABLE IF EXISTS friend_requests cascade
+                """,
+                """
+                DROP TABLE IF EXISTS notifications cascade
+                """
+                   )
+        for query in queries:
+            self.cursor.execute(query)
+
+        # create the tables again
+        self.create_tables()
+
 
 if __name__ == "__main__":
     db_connection = DataBaseConnection()

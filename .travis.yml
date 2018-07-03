@@ -11,9 +11,9 @@ services:
   - postgresql
 before_script:
   - psql -c 'create database myway;' -U postgres
-  - cd api/
-  - python db.py
-  - cd ..
+  - cd api/database
+  - python database.py
+  - cd ../..
 script:
     - nosetests --with-coverage --cover-tests --cover-package=api/tests 
     - coverage report

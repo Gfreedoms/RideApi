@@ -1,5 +1,5 @@
 from api.modals.user import User
-from api.db import DataBaseConnection
+
 from flask_restful import Resource, reqparse
 
 
@@ -15,20 +15,15 @@ class RegisterUser(Resource):
         parser.add_argument('confirm', type=str, required=True, help="password confirmation is required")
         data = parser.parse_args()
 
-        # create connection and set cursor
-        connection = DataBaseConnection()
-        cursor = connection.cursor
-        dict_cursor = connection.dict_cursor
-
         if data["password"] != data["confirm"]:
             return {"status": "fail", "message": "Password mismatch"}, 400
         
         # check if user with this email exists
-        user_data = User.get_user_by_email(dict_cursor, data["email"])
+        user_data = User.get_user_by_email(data["email"])
         
         if not user_data:
-            User.create_user(cursor, data["name"], data["email"], data["password"])
-            get_user = User.get_user_by_email(dict_cursor, data["email"])
+            User.create_user(data["name"], data["email"], data["password"])
+            get_user = User.get_user_by_email(data["email"])
 
             if get_user:
                 # get auth token 

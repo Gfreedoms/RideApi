@@ -9,7 +9,7 @@ and passengers to join available ride offers.
 	
 ## Features 
 - Users can post ride offers
-- Passangers can request to join a ride
+- Passengers can request to join a ride
 - Drivers can view, accept and reject join requests
 - Users can request other users to be thier friends such that they can share rides
 - Users can respond to friend requests 
