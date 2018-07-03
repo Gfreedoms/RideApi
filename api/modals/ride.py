@@ -18,15 +18,17 @@ class Ride:
     def create_ride(ride):
         query_string = """
                       INSERT INTO rides (user_id, origin, destination, departure_time, slots, description) 
-                      VALUES (%s,%s,%s,%s,%s,%s)
+                      VALUES (%s,%s,%s,%s,%s,%s) RETURNING ride_id;
                       """
         try:
             # create connection and set cursor
-
-            Ride.connection.cursor.execute(query_string, (ride.user_id, ride.origin, ride.destination,
-                                           ride.departure_time, ride.slots, ride.description))
+            cursor = Ride.connection.cursor
+            cursor.execute(query_string, (ride.user_id, ride.origin, ride.destination,
+                                          ride.departure_time, ride.slots, ride.description))
+            return cursor.fetchone()[0]
         except Exception as exp:
             pprint(exp)
+            return None
 
     @staticmethod
     def get_all_rides():

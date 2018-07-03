@@ -24,9 +24,9 @@ class SingleRide(Resource):
                     ride = Ride(row["ride_id"], row["user_id"], row["origin"], row["destination"],
                                 row["departure_time"].strftime("%Y-%m-%d %H:%M:%S"), row["slots"], row["description"])
 
-                    return {"status": "success", "ride": ride.__dict__}, 201
+                    return {"status": "success", "ride": ride.__dict__}, 200
                 else:
-                    return {"status": "success", "message": "ride not found"}, 404
+                    return {"status": "fail", "message": "ride not found"}, 404
 
         return {"status": "fail", "message": "unauthorised access"}, 401
 
@@ -49,7 +49,9 @@ class SingleRide(Resource):
             if isinstance(user_id, int):
                 temp_ride = Ride(None, user_id, data["origin"], data["destination"], data["departure_time"], data["slots"], data["description"])
 
-                Ride.create_ride(temp_ride)
-                return {"status": "success", "ride": temp_ride.__dict__}, 201
+                _id = Ride.create_ride(temp_ride)
+                return_ride = Ride(_id, user_id, data["origin"], data["destination"], data["departure_time"], data["slots"], data["description"])
+
+                return {"status": "success", "ride": return_ride.__dict__}, 201
                 
         return {"status": "fail", "message": "unauthorised access"}, 401

@@ -1,7 +1,5 @@
 import unittest
-
 import json
-
 from api.database.database import DataBaseConnection
 from api.settings import config
 from api.tests import helpers
@@ -119,6 +117,61 @@ class TestRide(unittest.TestCase):
         # fetch the rides
         get_rides_response = helpers.get_all_rides(self)
         self.assertEqual(get_rides_response.status_code, 200)
+
+    def test_get_single_ride(self):
+
+        # register user
+        register_response = helpers.register_user(self, "stephen", "sample4@mail.com",
+                                                  "123", "123")
+        data = json.loads(register_response.data.decode())
+
+        # create the ride
+        ride_response = helpers.post_ride_offer(self, data["auth_token"], "masaka", "mbale",
+                                                "2018-06-10 13:00", 3, "This is a")
+        ride_data = json.loads(ride_response.data.decode())
+
+        # fetch the created ride
+
+        get_ride_response = helpers.get_particular_ride(self, ride_data["ride"]["ride_id"], data["auth_token"])
+        get_ride_data = json.loads(get_ride_response.data.decode())
+
+        self.assertEqual(get_ride_data["status"], "success")
+        self.assertEqual(get_ride_response.status_code, 200)
+
+    def test_send_ride_request(self):
+
+        # register atleast 2 users
+        user1_response = helpers.register_user(self, "stephen", "sample5@mail.com",
+                                               "123", "123")
+        user1_data = json.loads(user1_response.data.decode())
+
+        user2_response = helpers.register_user(self, "stephen", "sample6@mail.com",
+                                               "123", "123")
+        user2_data = json.loads(user2_response.data.decode())
+
+        # create ride using user1's token
+        ride_response = helpers.post_ride_offer(self, user1_data["auth_token"], "masaka", "mbale",
+                                                "2018-05-4 13:00", 3, "This is jus")
+        ride_data = json.loads(ride_response.data.decode())
+
+        # send request to join ride using this person2's token
+        request_ride = helpers.request_ride_join(self, ride_data["ride"]["ride_id"],
+                                                 user2_data["auth_token"])
+
+        request_ride_data = json.loads(request_ride.data.decode())
+        self.assertTrue(request_ride_data["status"] == "success")
+        self.assertEqual(request_ride.status_code, 201)
+
+    def test_get_ride_with_invalid_ride_id(self):
+        # register user
+        user_response = helpers.register_user(self, "stephen", "sample5@mail.com",
+                                              "123", "123")
+        user_data = json.loads(user_response.data.decode())
+
+        request_ride = helpers.get_particular_ride(self, 0, user_data["auth_token"])
+        request_ride_data = json.loads(request_ride.data.decode())
+        self.assertTrue(request_ride_data["status"] == "fail")
+        self.assertEqual(request_ride.status_code, 404)
 
     # to be called after tests have run
     def tearDown(self):
