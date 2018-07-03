@@ -39,11 +39,13 @@ def post_ride_offer(self, user_token, ride_from, ride_to, dept_date, slots, desc
                          content_type='application/json')
 
 
-def get_particular_ride(self, ride_id):
+def get_particular_ride(self, ride_id, auth_token):
     """method get_particular_ride sends a request to return details of a given ride
         parameters self,ride_id
         returns json response"""
-    return self.app.get('/api/v1/rides/'+str(ride_id))
+    return self.app.get('/api/v1/rides/'+str(ride_id),
+                        headers=dict(Authorization='JWT '+auth_token),
+                        content_type='application/json')
 
 
 def get_all_rides(self):

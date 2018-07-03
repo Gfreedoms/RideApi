@@ -1,6 +1,6 @@
 from api.views.rides import RidesList
 from api.views.single_ride import SingleRide
-from api.views.request_ride import RequestRide
+from api.views.ride_request import RideRequest
 from api.views.register_user import RegisterUser
 from api.views.login import LoginUser
 from api.views.my_trips import MyTrips
@@ -27,5 +27,5 @@ api.add_resource(RidesList, '/api/v1/rides')  # get all rides
 api.add_resource(SingleRide, '/api/v1/rides/<int:ride_id>', '/api/v1/rides')
 api.add_resource(RegisterUser, '/api/v1/auth/register')  # register a user
 api.add_resource(LoginUser, '/api/v1/auth/login')  # register a user
-api.add_resource(RequestRide, '/api/v1/rides/<int:ride_id>/requests')
+api.add_resource(RideRequest, '/api/v1/rides/<int:ride_id>/requests','/api/v1/users/rides/<int:ride_id>/requests')
 api.add_resource(MyTrips, '/api/v1/mytrips')
