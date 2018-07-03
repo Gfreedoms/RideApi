@@ -5,7 +5,7 @@ from flask_restful import Resource
 # from flask_jwt import jwt_required
 
 
-class RequestRide(Resource):
+class RideRequest(Resource):
     """class RequestRide extends Resource class methods post"""
     # @jwt_required()
     def post(self, ride_id):
@@ -22,3 +22,17 @@ class RequestRide(Resource):
                     return {"status": "success", "message": "Request sent"}, 201
 
         return {"status": "fail", "message": "Request Rejected, Login to request a ride"}, 401
+
+    def get(self, ride_id):
+        header_token = request.headers.get('Authorization')
+        if header_token:
+            user_token = header_token.split(" ")[1]
+            user_id = User.decode_authentication_token(user_token)
+
+            if isinstance(user_id, int):
+                # check if ride exits
+                requests = Ride.ride_requests(ride_id)
+                return {"status": "success", "requests": requests}, 200
+
+        return {"status": "fail", "message": "Request Rejected, Login to request a ride"}, 401
+
