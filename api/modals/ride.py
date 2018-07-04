@@ -68,7 +68,6 @@ class Ride:
                 row = cursor.fetchone()
                 db_rides.append(temp_ride.__dict__)
 
-            pprint(db_rides)
             return db_rides
 
         except Exception as exp:
