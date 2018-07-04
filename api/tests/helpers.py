@@ -24,7 +24,7 @@ def request_ride_join(self, ride_id, auth_token):
     """method request_ride_join sends a request for a given user to join a ride
        parameters ride_id,auth_token
        returns json response"""
-    return self.app.post('/api/v1/rides/'+str(ride_id)+'/requests', headers=dict(Authorization='JWT '+auth_token),
+    return self.app.post('/api/v1/rides/'+str(ride_id)+'/requests', headers=dict(Authorization='Bearer '+auth_token),
                          content_type='application/json')
 
 
@@ -33,7 +33,7 @@ def post_ride_offer(self, user_token, ride_from, ride_to, dept_date, slots, desc
        parameters users_token,from,to,date,time,slots,description
        returns json response"""
 
-    return self.app.post('/api/v1/users/rides', headers=dict(Authorization='JWT '+user_token),
+    return self.app.post('/api/v1/users/rides', headers=dict(Authorization='Bearer '+user_token),
                          data=json.dumps(dict(origin=ride_from, destination=ride_to, departure_time=dept_date,
                                               slots=slots, description=description)),
                          content_type='application/json')
@@ -44,19 +44,20 @@ def get_particular_ride(self, ride_id, auth_token):
         parameters self,ride_id
         returns json response"""
     return self.app.get('/api/v1/rides/'+str(ride_id),
-                        headers=dict(Authorization='JWT '+auth_token),
+                        headers=dict(Authorization='Bearer '+auth_token),
                         content_type='application/json')
 
 
-def get_all_rides(self):
+def get_all_rides(self, auth_token):
     """method get_all_rides sends a request to return all ride offers in the system
         returns json response"""
-    return self.app.get('/api/v1/rides')
+    return self.app.get('/api/v1/rides',headers=dict(Authorization='Bearer '+auth_token),
+                        content_type='application/json')
 
 
 def get_my_trips(self, auth_token):
     """method get_my_trips sends a request to get all rides the user has taken or given"""
     
-    return self.app.get('/api/v1/mytrips', headers=dict(Authorization='JWT '+auth_token),
+    return self.app.get('/api/v1/mytrips', headers=dict(Authorization='Bearer '+auth_token),
                         content_type='application/json')
 

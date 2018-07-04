@@ -7,10 +7,15 @@ from api.views.my_trips import MyTrips
 from api.database.database import DataBaseConnection
 from flask import Flask
 from flask_restful import Api
-
+from flask_jwt_extended import JWTManager
+from api.settings import config
 
 app = Flask(__name__)
 api = Api(app)
+
+app.config['JWT_SECRET_KEY'] = config.SECRET_KEY
+jwt = JWTManager(app)
+
 app.config['TESTING'] = False
 app.config['DEBUG'] = True
 

@@ -19,90 +19,63 @@ class TestRide(unittest.TestCase):
         self.assertTrue(config.SECRET_KEY is 'ride_api_key')
 
     def test_register_user(self):
-        # register user
         register_response = helpers.register_user(self, "stephen", "sample1@mail.com",
                                                   "123", "123")
         data = json.loads(register_response.data.decode())
-        
-        # test response data
+
         self.assertTrue(data["status"] == "success")
         self.assertTrue(data["auth_token"])
         self.assertEqual(register_response.status_code, 201)
 
     def test_register_mismatch_password(self):
-        # register user
+
         register_response = helpers.register_user(self, "stephen", "sampleab@mail.com",
                                                   "123", "34e")
         data = json.loads(register_response.data.decode())
-        
-        # test response data
+
         self.assertTrue(data["status"] == "fail")
         self.assertEqual(register_response.status_code, 400)
 
     def test_login_for_registered_user(self):
         """method tests for logging in of a registered user"""
-       
-        # register 1 users 
-        user_response = helpers.register_user(self, "stephen",
-                                              "sample7@mail.com", "123", "123")
-        user_data = json.loads(user_response.data.decode())
 
-        # test register
-        self.assertTrue(user_data["status"] == "success")
-        self.assertTrue(user_data["auth_token"])
-        self.assertEqual(user_response.status_code, 201)
+        helpers.register_user(self, "stephen", "sample7@mail.com", "123", "123")
 
-        # attempt to login user
         login_response = helpers.login_user(self, "sample7@mail.com", "123")
         login_data = json.loads(login_response.data.decode())
 
-        # test login to a user that has been created on register at the start of the method
         self.assertTrue(login_data["status"] == "success")
         self.assertTrue(login_data["auth_token"])
         self.assertEqual(login_response.status_code, 200)
 
     def test_login_invalid_credentials(self):
 
-        # register 1 users
         user_response = helpers.register_user(self, "stephen", "samplesss@mail.com",
                                               "123", "123")
-        user_data = json.loads(user_response.data.decode())
-
-        # test register
-        self.assertTrue(user_data["status"] == "success")
-        self.assertTrue(user_data["auth_token"])
-        self.assertEqual(user_response.status_code, 201)
+        json.loads(user_response.data.decode())
 
         # attempt to login user but with wrong password
         login_response = helpers.login_user(self, "samplesss@mail.com", "fsd")
         login_data = json.loads(login_response.data.decode())
 
-        # test login to a user that has been created on register at the start of the method
         self.assertTrue(login_data["status"] == "fail")
         self.assertEqual(login_response.status_code, 401)
     
     def test_post_ride_offer(self):
-        # register user
+
         register_response = helpers.register_user(self, "stephen", "sample2@mail.com",
                                                   "123", "123")
-        data = json.loads(register_response.data.decode())
-        
-        # test register response data 
-        self.assertTrue(data["status"] == "success")
-        self.assertTrue(data["auth_token"])
-        self.assertEqual(register_response.status_code, 201)
+        register_data = json.loads(register_response.data.decode())
 
-        # use user's token to register an offer
-        post_ride_response = helpers.post_ride_offer(self, data["auth_token"], "masaka", "mbale",
+        post_ride_response = helpers.post_ride_offer(self, register_data["auth_token"], "masaka", "mbale",
                                                      "2018-06-10 13:00", 3, "This is just a sample request");
         post_ride_data = json.loads(post_ride_response.data.decode())
-        
-        # test response data
+
         self.assertTrue(post_ride_data["status"] == "success")
         self.assertEqual(post_ride_response.status_code, 201)
 
     def test_get_all_rides(self):
-        # register user 
+
         register_response = helpers.register_user(self, "stephen", "sample3@mail.com",
                                                   "123", "123")
         data = json.loads(register_response.data.decode())
@@ -114,22 +87,18 @@ class TestRide(unittest.TestCase):
                                 "2018-06-10 13:00", 3, "This is just a sample request")
         
         # fetch the rides
-        get_rides_response = helpers.get_all_rides(self)
+        get_rides_response = helpers.get_all_rides(self, data["auth_token"])
         self.assertEqual(get_rides_response.status_code, 200)
 
     def test_get_single_ride(self):
 
-        # register user
         register_response = helpers.register_user(self, "stephen", "sample4@mail.com",
                                                   "123", "123")
         data = json.loads(register_response.data.decode())
 
-        # create the ride
         ride_response = helpers.post_ride_offer(self, data["auth_token"], "masaka", "mbale",
                                                 "2018-06-10 13:00", 3, "This is a")
         ride_data = json.loads(ride_response.data.decode())
-
-        # fetch the created ride
 
         get_ride_response = helpers.get_particular_ride(self, ride_data["ride"]["ride_id"], data["auth_token"])
         get_ride_data = json.loads(get_ride_response.data.decode())
@@ -139,7 +108,6 @@ class TestRide(unittest.TestCase):
 
     def test_send_ride_request(self):
 
-        # register atleast 2 users
         user1_response = helpers.register_user(self, "stephen", "sample5@mail.com",
                                                "123", "123")
         user1_data = json.loads(user1_response.data.decode())
@@ -148,12 +116,10 @@ class TestRide(unittest.TestCase):
                                                "123", "123")
         user2_data = json.loads(user2_response.data.decode())
 
-        # create ride using user1's token
         ride_response = helpers.post_ride_offer(self, user1_data["auth_token"], "masaka", "mbale",
                                                 "2018-05-4 13:00", 3, "This is jus")
         ride_data = json.loads(ride_response.data.decode())
 
-        # send request to join ride using this person2's token
         request_ride = helpers.request_ride_join(self, ride_data["ride"]["ride_id"],
                                                  user2_data["auth_token"])
 
@@ -162,11 +128,12 @@ class TestRide(unittest.TestCase):
         self.assertEqual(request_ride.status_code, 201)
 
     def test_get_ride_with_invalid_ride_id(self):
-        # register user
+
         user_response = helpers.register_user(self, "stephen", "sample5@mail.com",
                                               "123", "123")
         user_data = json.loads(user_response.data.decode())
 
+        # no ride will ever have id zero
         request_ride = helpers.get_particular_ride(self, 0, user_data["auth_token"])
         request_ride_data = json.loads(request_ride.data.decode())
         self.assertTrue(request_ride_data["status"] == "fail")
@@ -175,7 +142,6 @@ class TestRide(unittest.TestCase):
     def test_get_my_trips(self):
         """test user getting all his registered trips"""
 
-        # register atleast 2 users
         user1_response = helpers.register_user(self, "stephen", "sample9@mail.com",
                                                "123", "123")
         user1_data = json.loads(user1_response.data.decode())
@@ -184,7 +150,6 @@ class TestRide(unittest.TestCase):
                                                "123", "123")
         user2_data = json.loads(user2_response.data.decode())
 
-        # create ride using user1's token
         helpers.post_ride_offer(self, user1_data["auth_token"],
                                                  "masaka", "mbale", "14/06/2018 13:00",
                                                  3, "This is just a sample request")
@@ -193,32 +158,28 @@ class TestRide(unittest.TestCase):
                                                  "tororo", "14/06/2018 13:00",
                                                  3, "This is just a sample request")
 
-        # create ride using user2 token
         ride_response3 = helpers.post_ride_offer(self, user2_data["auth_token"],
                                                  "makerere", "bugolobi", "14/06/2018 13:00",
                                                  3, "This is just a sample request")
 
         ride3_data = json.loads(ride_response3.data.decode())
 
-        # then send request to join ride using this person1's token
         helpers.request_ride_join(self, ride3_data["ride"]["ride_id"], user1_data["auth_token"])
 
-        # request all trips for the user and check
-        mytrips_response = helpers.get_my_trips(self, user1_data["auth_token"])
-        mytrips_data = json.loads(mytrips_response.data.decode())
-        self.assertTrue(mytrips_response.status_code, 200)
-        self.assertEqual(mytrips_data["status"], "success")
-        self.assertIsInstance(mytrips_data["my_rides"], list)
+        user_trips_response = helpers.get_my_trips(self, user1_data["auth_token"])
+        users_trips_data = json.loads(user_trips_response.data.decode())
+        self.assertTrue(user_trips_response.status_code, 200)
+        self.assertEqual(users_trips_data["status"], "success")
+        self.assertIsInstance(users_trips_data["my_rides"], list)
 
-    def test_get_rides_wrong_token(self):
-        # request all trips for the user and check
-        mytrips_response = helpers.get_my_trips(self, "jwt faketoken")
-        mytrips_data = json.loads(mytrips_response.data.decode())
+    # def test_get_rides_wrong_token(self):
+    #
+    #     user_trips_response = helpers.get_my_trips(self, "jwt faketoken")
+    #     users_trips_data = json.loads(user_trips_response.data.decode())
+    #
+    #     self.assertTrue(user_trips_response.status_code, 401)
+    #     self.assertEqual(users_trips_data["status"], "fail")
 
-        self.assertTrue(mytrips_response.status_code, 401)
-        self.assertEqual(mytrips_data["status"], "fail")
-
-    # to be called after tests have run
     def tearDown(self):
         connection = DataBaseConnection()
         connection.drop_test_tables()

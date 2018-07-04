@@ -1,27 +1,27 @@
 from api.modals.user import User
 from flask_restful import Resource, reqparse
+import datetime
+from flask_jwt_extended import create_access_token
 
 
 class LoginUser(Resource):
     """LoginUses extends Resource methods post which logins i given user"""
     def post(self):
         """logins in a given user"""
-        # parse arguments to ensure that required fields are sent
+
         parser = reqparse.RequestParser()
         parser.add_argument('email', type=str, required=True, help="Email field is required")
         parser.add_argument('password', type=str, required=True, help="Password field is required")
 
         data = parser.parse_args()
-
         user_data = User.get_user_by_email(data["email"])
 
         if user_data:
-            # find if the user passwords match
             if user_data["password"] == data["password"]:
-                # generate token
-                auth_token = User.encode_authentication_token(user_data['user_id'])
+
+                expires = datetime.timedelta(days=1)
+                auth_token = create_access_token(identity=user_data['user_id'], expires_delta=expires)
                 return {"status": "success", "message": "successful login",
-                        "auth_token": auth_token.decode()}, 200
-                        
-        # If no return till this point then the user was not found
+                        "auth_token": auth_token}, 200
+
         return {"status": "fail", "message": "Invalid user name or password"}, 401
