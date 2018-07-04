@@ -18,6 +18,7 @@ class Request:
 
 
 class Ride:
+    connection = DataBaseConnection()
 
     def __init__(self, ride_id, user_id, origin, destination, departure_time, slots, description):
         self.ride_id = ride_id
@@ -36,8 +37,8 @@ class Ride:
                       """
         try:
             # create connection and set cursor
-            connection = DataBaseConnection()
-            cursor = connection.cursor
+
+            cursor = Ride.connection.cursor
             cursor.execute(query_string, (ride.user_id, ride.origin, ride.destination,
                                           ride.departure_time, ride.slots, ride.description))
 
@@ -53,10 +54,9 @@ class Ride:
                      SELECT * FROM rides
                      """
         try:
-            connection = DataBaseConnection()
-            cursor = connection.dict_cursor
+
+            cursor = Ride.connection.dict_cursor
             cursor.execute(query_string)
-            # connection.connection.close()
             row = cursor.fetchone()
 
             db_rides = []
@@ -80,10 +80,10 @@ class Ride:
         query_string = "SELECT * FROM rides WHERE ride_id = %s "
 
         try:
-            connection = DataBaseConnection()
-            cursor = connection.dict_cursor
+
+            cursor = Ride.connection.dict_cursor
             cursor.execute(query_string, [ride_id])
-            # connection.connection.close()
+
             return cursor.fetchone()
 
         except Exception as exp:
@@ -95,14 +95,59 @@ class Ride:
         query_string = "INSERT INTO ride_requests (ride_id,user_id,status) VALUES (%s,%s,%s)"
 
         try:
-            connection = DataBaseConnection()
-            connection.cursor.execute(query_string, (ride_id, user_id, "pending"))
-            # connection.connection.close()
+
+            Ride.connection.cursor.execute(query_string, (ride_id, user_id, "pending"))
+
             return True
 
         except Exception as exp:
             pprint(exp)
             return None
+
+    @staticmethod
+    def get_request(request_id):
+        query_string = "SELECT * FROM ride_requests WHERE request_id = %s"
+
+        try:
+            cursor = Ride.connection.dict_cursor
+            cursor.execute(query_string, (request_id,))
+            row = cursor.fetchone()
+            return row
+
+        except Exception as exp:
+            pprint(exp)
+            return "exp"
+
+    @staticmethod
+    def user_owns_ride(ride_id, user_id):
+        query_string = "SELECT * FROM rides WHERE ride_id = %s AND user_id=%s"
+
+        try:
+            cursor = Ride.connection.dict_cursor
+            cursor.execute(query_string, (ride_id, user_id))
+            row = cursor.fetchone()
+            if row:
+                return True
+            else:
+                return False
+
+        except Exception as exp:
+            pprint(exp)
+            return "exp"
+
+    @staticmethod
+    def update_ride_request(ride_id, request_id, status):
+        query_string = """
+                        UPDATE ride_requests SET status=%s
+                        WHERE request_id=%s AND ride_id=%s
+                     """
+        try:
+            cursor = Ride.connection.cursor
+            cursor.execute(query_string, (status, request_id, ride_id))
+            return True
+        except Exception as exp:
+            pprint(exp)
+            return False
 
     @staticmethod
     def ride_requests(ride_id):
@@ -113,9 +158,9 @@ class Ride:
                 WHERE rq.ride_id=%s
                 """
         try:
-            connection = DataBaseConnection()
-            dict_cursor = connection.dict_cursor
-            dict_cursor.execute(query, [ride_id])
+
+            dict_cursor = Ride.connection.dict_cursor
+            dict_cursor.execute(query, (ride_id,))
             row = dict_cursor.fetchone()
             requests = []
             while row:
@@ -125,7 +170,7 @@ class Ride:
                 requests.append(temp_request.__dict__)
                 row = dict_cursor.fetchone()
                 requests.append(row)
-            # connection.connection.close()
+
             return requests
 
         except Exception as exp:

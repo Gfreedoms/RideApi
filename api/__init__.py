@@ -24,8 +24,11 @@ app.config.from_object(__name__)
 print(app.config["DATABASE"])
 
 api.add_resource(RidesList, '/api/v1/rides')  # get all rides
-api.add_resource(SingleRide, '/api/v1/rides/<int:ride_id>', '/api/v1/rides')
-api.add_resource(RegisterUser, '/api/v1/auth/register')  # register a user
+api.add_resource(SingleRide, '/api/v1/rides/<int:ride_id>', '/api/v1/users/rides')
+api.add_resource(RegisterUser, '/api/v1/auth/signup')  # register a user
 api.add_resource(LoginUser, '/api/v1/auth/login')  # register a user
-api.add_resource(RideRequest, '/api/v1/rides/<int:ride_id>/requests','/api/v1/users/rides/<int:ride_id>/requests')
+api.add_resource(RideRequest, '/api/v1/rides/<int:ride_id>/requests',
+                 '/api/v1/users/rides/<int:ride_id>/requests',
+                 '/api/v1/users/rides/<int:ride_id>/requests/<int:request_id>')
+
 api.add_resource(MyTrips, '/api/v1/mytrips')
