@@ -78,7 +78,7 @@ class DataBaseConnection:
             )
             """
         )
-        # create all tables
+
         for query in queries:
             self.cursor.execute(query)
 
@@ -101,9 +101,6 @@ class DataBaseConnection:
                    )
         for query in queries:
             self.cursor.execute(query)
-
-        # create the tables again
-        self.create_tables()
 
 
 if __name__ == "__main__":

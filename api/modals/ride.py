@@ -29,6 +29,7 @@ class Ride:
         self.slots = slots
         self.description = description
 
+
     @staticmethod
     def create_ride(ride):
         query_string = """
@@ -36,7 +37,6 @@ class Ride:
                       VALUES (%s,%s,%s,%s,%s,%s) RETURNING ride_id;
                       """
         try:
-            # create connection and set cursor
 
             cursor = Ride.connection.cursor
             cursor.execute(query_string, (ride.user_id, ride.origin, ride.destination,
@@ -79,10 +79,8 @@ class Ride:
         query_string = "SELECT * FROM rides WHERE ride_id = %s "
 
         try:
-
             cursor = Ride.connection.dict_cursor
             cursor.execute(query_string, [ride_id])
-
             return cursor.fetchone()
 
         except Exception as exp:
@@ -92,15 +90,12 @@ class Ride:
     @staticmethod
     def create_ride_request(ride_id, user_id):
         query_string = "INSERT INTO ride_requests (ride_id,user_id,status) VALUES (%s,%s,%s)"
-
         try:
-
             Ride.connection.cursor.execute(query_string, (ride_id, user_id, "pending"))
-
             return True
 
         except Exception as exp:
-            pprint(exp)
+            print(exp)
             return None
 
     @staticmethod
@@ -132,7 +127,7 @@ class Ride:
 
         except Exception as exp:
             pprint(exp)
-            return "exp"
+            return False
 
     @staticmethod
     def update_ride_request(ride_id, request_id, status):
@@ -166,9 +161,9 @@ class Ride:
                 ride = Ride(row["ride_id"], row["user_id"], row["origin"], row["destination"],
                             row["departure_time"].strftime("%Y-%m-%d %H:%M:%S"), row["slots"], row["description"])
                 temp_request = Request(ride, row["request_id"], row["requestor_id"], row["owner"], row["requestor"])
+
                 requests.append(temp_request.__dict__)
                 row = dict_cursor.fetchone()
-                requests.append(row)
 
             return requests
 
@@ -196,7 +191,7 @@ class Ride:
                 temp_request = Request(ride, row["request_id"], row["requestor_id"], row["owner"], row["requestor"])
                 requests.append(temp_request.__dict__)
                 row = dict_cursor.fetchone()
-                requests.append(row)
+
 
             return requests
         except Exception as exp:
@@ -209,7 +204,6 @@ class Ride:
         """
 
         try:
-
             cursor = Ride.connection.dict_cursor
             cursor.execute(my_offers, [user_id])
             row = cursor.fetchone()

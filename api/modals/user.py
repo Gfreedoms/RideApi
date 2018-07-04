@@ -1,14 +1,12 @@
-import datetime
-import jwt
 from api.database.database import DataBaseConnection
-from api.settings import config
 
 
 class User:
-    connection = DataBaseConnection()
-
     """User class defines the methods needed by user and the attributes.
         on creation pass in id,name,email,password"""
+
+    connection = DataBaseConnection()
+
     def __init__(self, _id, name, email, password, confirm):
         self.id = _id
         self.name = name
@@ -16,31 +14,6 @@ class User:
         self.password = password
         self.confirm = confirm
 
-    @staticmethod
-    def encode_authentication_token(user_id):
-        """generates authentication token for a particular user"""
-        try:
-            payload = {"exp": datetime.datetime.utcnow() + datetime.timedelta(days=1),
-                       "iat": datetime.datetime.utcnow(),
-                       "sub": user_id}
-            return jwt.encode(payload, config.SECRET_KEY, algorithm='HS256')  # algorithm for signing
-        except Exception as exp:
-            return exp
-
-    @staticmethod
-    def decode_authentication_token(auth_token):
-        """Decodes the auth_token into the user id and returns the user id"""
-
-        try:
-            payload = jwt.decode(auth_token, config.SECRET_KEY)
-            return payload['sub']
-
-        except jwt.ExpiredSignatureError:
-            return "Token Expired. Please Login Again"
-        
-        except jwt.InvalidTokenError:
-            return "Invalid token. Please Login Again"
-    
     @staticmethod
     def create_user(name, email, password):
         cursor = User.connection.cursor

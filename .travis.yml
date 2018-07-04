@@ -15,7 +15,7 @@ before_script:
   - python database.py
   - cd ../..
 script:
-    - nosetests --with-coverage --cover-tests --cover-package=api/tests 
+    - nosetests --with-coverage --cover-tests --cover-package=api
     - coverage report
 after_success:
     - coveralls
