@@ -59,3 +59,4 @@ def get_my_trips(self, auth_token):
     
     return self.app.get('/api/v1/mytrips', headers=dict(Authorization='JWT '+auth_token),
                         content_type='application/json')
+

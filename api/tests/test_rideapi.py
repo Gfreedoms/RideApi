@@ -172,6 +172,52 @@ class TestRide(unittest.TestCase):
         self.assertTrue(request_ride_data["status"] == "fail")
         self.assertEqual(request_ride.status_code, 404)
 
+    def test_get_my_trips(self):
+        """test user getting all his registered trips"""
+
+        # register atleast 2 users
+        user1_response = helpers.register_user(self, "stephen", "sample9@mail.com",
+                                               "123", "123")
+        user1_data = json.loads(user1_response.data.decode())
+
+        user2_response = helpers.register_user(self, "stephen", "sample10@mail.com",
+                                               "123", "123")
+        user2_data = json.loads(user2_response.data.decode())
+
+        # create ride using user1's token
+        helpers.post_ride_offer(self, user1_data["auth_token"],
+                                                 "masaka", "mbale", "14/06/2018 13:00",
+                                                 3, "This is just a sample request")
+
+        helpers.post_ride_offer(self, user1_data["auth_token"], "kabale",
+                                                 "tororo", "14/06/2018 13:00",
+                                                 3, "This is just a sample request")
+
+        # create ride using user2 token
+        ride_response3 = helpers.post_ride_offer(self, user2_data["auth_token"],
+                                                 "makerere", "bugolobi", "14/06/2018 13:00",
+                                                 3, "This is just a sample request")
+
+        ride3_data = json.loads(ride_response3.data.decode())
+
+        # then send request to join ride using this person1's token
+        helpers.request_ride_join(self, ride3_data["ride"]["ride_id"], user1_data["auth_token"])
+
+        # request all trips for the user and check
+        mytrips_response = helpers.get_my_trips(self, user1_data["auth_token"])
+        mytrips_data = json.loads(mytrips_response.data.decode())
+        self.assertTrue(mytrips_response.status_code, 200)
+        self.assertEqual(mytrips_data["status"], "success")
+        self.assertIsInstance(mytrips_data["my_rides"], list)
+
+    def test_get_rides_wrong_token(self):
+        # request all trips for the user and check
+        mytrips_response = helpers.get_my_trips(self, "jwt faketoken")
+        mytrips_data = json.loads(mytrips_response.data.decode())
+
+        self.assertTrue(mytrips_response.status_code, 401)
+        self.assertEqual(mytrips_data["status"], "fail")
+
     # to be called after tests have run
     def tearDown(self):
         connection = DataBaseConnection()
