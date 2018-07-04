@@ -10,8 +10,7 @@ class TestRide(unittest.TestCase):
     def setUp(self):
         app.config['TESTING'] = True
         app.config['DEBUG'] = False
-        app.config['DATABASE'] = "myway"
-        connection = DataBaseConnection(app.config["DATABASE"])
+        connection = DataBaseConnection()
         connection.drop_test_tables()
         connection.create_tables()
         self.app = app.test_client()
@@ -175,7 +174,7 @@ class TestRide(unittest.TestCase):
 
     # to be called after tests have run
     def tearDown(self):
-        connection = DataBaseConnection(app.config["DATABASE"])
+        connection = DataBaseConnection()
         connection.drop_test_tables()
         connection.create_tables()
 

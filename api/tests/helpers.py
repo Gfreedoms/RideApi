@@ -6,7 +6,7 @@ def register_user(self, users_name, user_email, password1, password2):
        parameters name,email,password,confirm_password
        returns json response with users token"""
 
-    return self.app.post('/api/v1/auth/register', data=json.dumps(dict(email=user_email, name=users_name,
+    return self.app.post('/api/v1/auth/signup', data=json.dumps(dict(email=user_email, name=users_name,
                                                                        password=password1, confirm=password2)),
                          content_type='application/json')
 
@@ -24,7 +24,7 @@ def request_ride_join(self, ride_id, auth_token):
     """method request_ride_join sends a request for a given user to join a ride
        parameters ride_id,auth_token
        returns json response"""
-    return self.app.post('/api/v1/rides/'+str(ride_id)+'/requests', headers=dict(Authorization='jwt '+auth_token),
+    return self.app.post('/api/v1/rides/'+str(ride_id)+'/requests', headers=dict(Authorization='JWT '+auth_token),
                          content_type='application/json')
 
 
@@ -33,7 +33,7 @@ def post_ride_offer(self, user_token, ride_from, ride_to, dept_date, slots, desc
        parameters users_token,from,to,date,time,slots,description
        returns json response"""
 
-    return self.app.post('/api/v1/rides', headers=dict(Authorization='jwt '+user_token),
+    return self.app.post('/api/v1/users/rides', headers=dict(Authorization='JWT '+user_token),
                          data=json.dumps(dict(origin=ride_from, destination=ride_to, departure_time=dept_date,
                                               slots=slots, description=description)),
                          content_type='application/json')
@@ -57,5 +57,5 @@ def get_all_rides(self):
 def get_my_trips(self, auth_token):
     """method get_my_trips sends a request to get all rides the user has taken or given"""
     
-    return self.app.get('/api/v1/mytrips', headers=dict(Authorization='jwt '+auth_token),
+    return self.app.get('/api/v1/mytrips', headers=dict(Authorization='JWT '+auth_token),
                         content_type='application/json')
