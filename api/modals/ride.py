@@ -176,20 +176,29 @@ class Ride:
         except Exception as exp:
             pprint(exp)
 
-    def my_requests(self):
+    @staticmethod
+    def my_requests(user_id):
         my_requests = """
-            SELECT rq.*,u.name,r.* as owner,u2.name as requestor  FROM ride_requests rq
+            SELECT rq.request_id,rq.status,rq.user_id as requestor_id,u.name as owner,r.*,u2.name as requestor FROM ride_requests rq
             LEFT JOIN rides r ON (r.ride_id=rq.ride_id)
             LEFT JOIN users u on (u.user_id=r.user_id)
             LEFT JOIN users u2 on (u2.user_id=rq.user_id)
             WHERE rq.user_id=%s
             """
         try:
-            connection = DataBaseConnection()
-            dict_cursor = connection.dict_cursor
-            dict_cursor.execute(my_requests, self.user_id)
-            requests = dict_cursor.fetchmany()
-            # connection.connection.close()
+
+            dict_cursor = Ride.connection.dict_cursor
+            dict_cursor.execute(my_requests, (user_id,))
+            row = dict_cursor.fetchone()
+            requests = []
+            while row:
+                ride = Ride(row["ride_id"], row["user_id"], row["origin"], row["destination"],
+                            row["departure_time"].strftime("%Y-%m-%d %H:%M:%S"), row["slots"], row["description"])
+                temp_request = Request(ride, row["request_id"], row["requestor_id"], row["owner"], row["requestor"])
+                requests.append(temp_request.__dict__)
+                row = dict_cursor.fetchone()
+                requests.append(row)
+
             return requests
         except Exception as exp:
             pprint(exp)
@@ -201,11 +210,16 @@ class Ride:
         """
 
         try:
-            connection = DataBaseConnection()
-            dict_cursor = connection.dict_cursor
-            dict_cursor.execute(my_offers, [user_id])
-            offers = dict_cursor.fetchmany()
-            # connection.connection.close()
+
+            cursor = Ride.connection.dict_cursor
+            cursor.execute(my_offers, [user_id])
+            row = cursor.fetchone()
+            offers = []
+            while row:
+                temp_ride = Ride(row["ride_id"], row["user_id"], row["origin"], row["destination"],
+                                 row["departure_time"].strftime("%Y-%m-%d %H:%M:%S"), row["slots"], row["description"])
+                row = cursor.fetchone()
+                offers.append(temp_ride.__dict__)
             return offers
         except Exception as exp:
             pprint(exp)
