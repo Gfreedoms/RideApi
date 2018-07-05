@@ -1,7 +1,7 @@
 from api.modals.ride import Ride
 from flask_restful import Resource, reqparse
 from flask_jwt_extended import jwt_required, get_jwt_identity
-
+from api.tests import helpers
 
 class RideRequest(Resource):
     """class RequestRide extends Resource class methods post"""
@@ -32,6 +32,14 @@ class RideRequest(Resource):
         parser = reqparse.RequestParser()
         parser.add_argument('status', type=str, required=True, help="status is required")
         data = parser.parse_args()
+
+        missing_fields = helpers.check_missing_field(["status"], [data["status"]])
+
+        if missing_fields:
+            return {"message": missing_fields}, 400
+
+        if not helpers.validate_status(data["status"]):
+            return {"message": "wrong status, accepted values are 'accepted' or 'rejected' "}
 
         user_id = get_jwt_identity()
 

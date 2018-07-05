@@ -1,6 +1,7 @@
 from api.modals.ride import Ride
 from flask_restful import Resource, reqparse
 from flask_jwt_extended import jwt_required, get_jwt_identity
+from api.tests import helpers
 
 
 class SingleRide(Resource):
@@ -36,6 +37,14 @@ class SingleRide(Resource):
         parser.add_argument('slots', type=str, required=True, help="slots field is required")
         parser.add_argument('description', type=str, required=True, help="description field is required")
         data = parser.parse_args()
+
+        missing_fields = helpers.check_missing_field(
+            ["origin", "destination", "departure_time", "slots", "description"],
+            [data["origin"], data["destination"], data["departure_time"], data["slots"], data["description"]]
+        )
+
+        if missing_fields:
+            return {"message:": missing_fields}, 400
 
         user_id = get_jwt_identity()
         temp_ride = Ride(None, user_id, data["origin"], data["destination"], data["departure_time"], data["slots"], data["description"])

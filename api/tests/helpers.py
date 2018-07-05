@@ -1,6 +1,7 @@
 import json
 from api.modals.user import User
 from api.modals.ride import Ride
+import re
 
 valid_user = User(None, "stephen", "sample1@mail.com", "123", "123")
 second_valid_user = User(None, "stephen", "sample2@mail.com", "333", "333")
@@ -72,3 +73,28 @@ def get_my_trips(self, auth_token):
     return self.app.get('/api/v1/mytrips', headers=dict(Authorization='Bearer '+auth_token),
                         content_type='application/json')
 
+
+def check_missing_field(fields, values):
+    message = []
+    for i in range(0, len(fields)):
+        if not values[i]:
+            ans = fields[i]+" can't be blank"
+            message.append(ans)
+    if message:
+        return ' , '.join(message)
+    else:
+        return False
+
+
+def validate_status(status):
+    if status.lower() != "accepted" or status.lower() != "rejected":
+        return False
+    else:
+        return True
+
+
+def validate_email(email):
+    if not re.match(r"[^@]+@[^@]+\.[^@]+", email):
+        return False
+    else:
+        return True
