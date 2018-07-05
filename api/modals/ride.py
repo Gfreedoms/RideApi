@@ -3,7 +3,7 @@ from api.database.database_handler import DataBaseConnection
 
 
 class Request:
-    def __init__(self, ride, request_id, owner_id, owner_name, requestor_name):
+    def __init__(self, ride, request_id, owner_id, owner_name, requestor_name,status):
         self.request_id = request_id
         self.ride_id = ride.ride_id
         self.requestor_id = ride.user_id
@@ -15,6 +15,7 @@ class Request:
         self.owner_id = owner_id
         self.owner_name = owner_name
         self.requestor_name = requestor_name
+        self.status = status
 
 
 class Ride:
@@ -87,11 +88,12 @@ class Ride:
 
     @staticmethod
     def create_ride_request(ride_id, user_id):
-        query_string = "INSERT INTO ride_requests (ride_id,user_id,status) VALUES (%s,%s,%s)"
+        query_string = "INSERT INTO ride_requests (ride_id,user_id,status) VALUES (%s,%s,%s) RETURNING request_id"
         try:
             connection = DataBaseConnection()
-            connection.cursor.execute(query_string, (ride_id, user_id, "pending"))
-            return True
+            cursor= connection.cursor
+            cursor.execute(query_string, (ride_id, user_id, "pending"))
+            return cursor.fetchone()[0]
 
         except Exception as exp:
             print(exp)
@@ -147,7 +149,7 @@ class Ride:
 
     @staticmethod
     def ride_requests(ride_id):
-        query = """SELECT rq.request_id,rq.status,rq.user_id as requestor_id,u.name as owner,r.*,u2.name as requestor  FROM ride_requests rq
+        query = """SELECT rq.request_id,rq.status,rq.user_id,rq.status as requestor_id,u.name as owner,r.*,u2.name as requestor  FROM ride_requests rq
                 LEFT JOIN rides r ON (r.ride_id=rq.ride_id)
                 LEFT JOIN users u on (u.user_id=r.user_id)
                 LEFT JOIN users u2 on (u2.user_id=rq.user_id)
@@ -162,7 +164,7 @@ class Ride:
             while row:
                 ride = Ride(row["ride_id"], row["user_id"], row["origin"], row["destination"],
                             row["departure_time"].strftime("%Y-%m-%d %H:%M:%S"), row["slots"], row["description"])
-                temp_request = Request(ride, row["request_id"], row["requestor_id"], row["owner"], row["requestor"])
+                temp_request = Request(ride, row["request_id"], row["requestor_id"], row["owner"], row["requestor"], row["status"])
 
                 requests.append(temp_request.__dict__)
                 row = dict_cursor.fetchone()

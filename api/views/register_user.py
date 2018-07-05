@@ -23,13 +23,13 @@ class RegisterUser(Resource):
         )
 
         if missing_fields:
-            return {"message:": missing_fields}, 400
+            return {"status": "fail", "message:": missing_fields}, 400
 
         if not data["name"].isalnum():
-            return {"message:": "Invalid name"}, 400
+            return {"status": "fail", "message:": "Invalid name"}, 400
 
         if not helpers.validate_email(data["email"]):
-            return {"message:": "Invalid email"}, 400
+            return {"status": "fail", "message:": "Invalid email"}, 400
 
         if data["password"] != data["confirm"]:
             return {"status": "fail", "message": "Password mismatch"}, 400

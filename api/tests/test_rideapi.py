@@ -36,6 +36,19 @@ class TestRide(unittest.TestCase):
         self.assertTrue(data["status"] == "fail")
         self.assertEqual(register_response.status_code, 400)
 
+    def test_register_with_wrong_attributes(self):
+        missing_values_user = helpers.register_user(self, helpers.user_with_missing_values)
+        data = json.loads(missing_values_user.data.decode())
+
+        self.assertTrue(data["status"] == "fail")
+        self.assertEqual(missing_values_user.status_code, 400)
+
+        malformed_email_user = helpers.register_user(self, helpers.user_with_malformed_email)
+        malformed_email_user_data = json.loads(malformed_email_user.data.decode())
+
+        self.assertTrue(malformed_email_user_data["status"] == "fail")
+        self.assertEqual(missing_values_user.status_code, 400)
+
     def test_login_for_registered_user(self):
         """method tests for logging in of a registered user"""
 
@@ -71,6 +84,17 @@ class TestRide(unittest.TestCase):
 
         self.assertTrue(post_ride_data["status"] == "success")
         self.assertEqual(post_ride_response.status_code, 201)
+
+    def test_ride_with_missing_values(self):
+        register_response = helpers.register_user(self, helpers.valid_user)
+        register_data = json.loads(register_response.data.decode())
+
+        post_ride_response = helpers.post_ride_offer(self, register_data["auth_token"], helpers.missing_values_ride)
+
+        post_ride_data = json.loads(post_ride_response.data.decode())
+
+        self.assertTrue(post_ride_data["status"] == "fail")
+        self.assertEqual(post_ride_response.status_code, 400)
 
     def test_get_all_rides(self):
 
@@ -115,6 +139,50 @@ class TestRide(unittest.TestCase):
         request_ride_data = json.loads(request_ride.data.decode())
         self.assertTrue(request_ride_data["status"] == "success")
         self.assertEqual(request_ride.status_code, 201)
+
+    def test_get_ride_requests(self):
+        first_user_response = helpers.register_user(self, helpers.valid_user)
+        first_user_data = json.loads(first_user_response.data.decode())
+
+        second_user_response = helpers.register_user(self, helpers.second_valid_user)
+        second_user_data = json.loads(second_user_response.data.decode())
+
+        ride_response = helpers.post_ride_offer(self, first_user_data["auth_token"], helpers.valid_ride)
+        ride_data = json.loads(ride_response.data.decode())
+
+        self.assertTrue(ride_data["ride"]["ride_id"])
+        helpers.request_ride_join(self, ride_data["ride"]["ride_id"],
+                                  second_user_data["auth_token"])
+
+        ride_requests_response = helpers.get_ride_requests(self, ride_data["ride"]["ride_id"], first_user_data["auth_token"])
+        ride_requests_data = json.loads(ride_requests_response.data.decode())
+
+        self.assertTrue(ride_requests_data["status"] == "success")
+        self.assertEqual(ride_requests_response.status_code, 200)
+
+    def test_update_request(self):
+        first_user_response = helpers.register_user(self, helpers.valid_user)
+        first_user_data = json.loads(first_user_response.data.decode())
+
+        second_user_response = helpers.register_user(self, helpers.second_valid_user)
+        second_user_data = json.loads(second_user_response.data.decode())
+
+        ride_response = helpers.post_ride_offer(self, first_user_data["auth_token"], helpers.valid_ride)
+        ride_data = json.loads(ride_response.data.decode())
+
+        self.assertTrue(ride_data["ride"]["ride_id"])
+        request_ride = helpers.request_ride_join(self, ride_data["ride"]["ride_id"],
+                                                 second_user_data["auth_token"])
+
+        request_ride_data = json.loads(request_ride.data.decode())
+
+        update_request = helpers.update_request(self, ride_data["ride"]["ride_id"], request_ride_data["request_id"],
+                                                second_user_data["auth_token"], "accepted")
+
+        update_request_data = json.loads(request_ride.data.decode())
+
+        self.assertTrue(update_request_data["status"] == "success")
+        self.assertEqual(update_request.status_code, 200)
 
     def test_get_ride_with_invalid_ride_id(self):
 

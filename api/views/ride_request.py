@@ -3,6 +3,7 @@ from flask_restful import Resource, reqparse
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from api.tests import helpers
 
+
 class RideRequest(Resource):
     """class RequestRide extends Resource class methods post"""
 
@@ -12,8 +13,8 @@ class RideRequest(Resource):
         user_id = get_jwt_identity()
         ride = Ride(ride_id)
         if ride.get_ride():
-            Ride.create_ride_request(ride_id, user_id)
-            return {"status": "success", "message": "Request sent"}, 201
+            request_id = Ride.create_ride_request(ride_id, user_id)
+            return {"status": "success", "request_id": request_id, "message": "Request sent"}, 201
 
         return {"status": "fail", "message": "Ride not found"}, 404
 

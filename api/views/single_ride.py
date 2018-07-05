@@ -44,7 +44,7 @@ class SingleRide(Resource):
         )
 
         if missing_fields:
-            return {"message:": missing_fields}, 400
+            return {"status": "fail", "message:": missing_fields}, 400
 
         user_id = get_jwt_identity()
         temp_ride = Ride(None, user_id, data["origin"], data["destination"], data["departure_time"], data["slots"], data["description"])
