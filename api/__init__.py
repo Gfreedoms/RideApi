@@ -18,7 +18,8 @@ jwt = JWTManager(app)
 
 app.config['TESTING'] = False
 app.config['DEBUG'] = True
-
+app.config['DATABASE'] = "myway"
+app.config['TEST_DATABASE'] = "myway_test"
 app.config.from_object(__name__)
 
 
