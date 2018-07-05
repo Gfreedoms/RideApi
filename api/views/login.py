@@ -24,4 +24,4 @@ class LoginUser(Resource):
                 return {"status": "success", "message": "successful login",
                         "auth_token": auth_token}, 200
 
-        return {"status": "fail", "message": "Invalid user name or password"}, 401
+        return {"status": "fail", "message": "Unauthorised Access. Invalid email or password"}, 401
