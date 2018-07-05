@@ -114,6 +114,7 @@ class DataBaseConnection:
         for query in queries:
             self.cursor.execute(query)
 
+
 if __name__ == "__main__":
-    db_connection = DataBaseConnection(current_app.config["DATABASE"])
+    db_connection = DataBaseConnection("myway")
     db_connection.create_tables()
