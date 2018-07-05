@@ -5,7 +5,7 @@ from api.views.register_user import RegisterUser
 from api.views.login import LoginUser
 from api.views.my_trips import MyTrips
 from api.database.database_handler import DataBaseConnection
-from flask import Flask
+from flask import Flask, jsonify
 from flask_restful import Api
 from flask_jwt_extended import JWTManager
 from api.settings import config
@@ -21,6 +21,11 @@ app.config['DEBUG'] = True
 app.config['DATABASE'] = "myway"
 app.config['TEST_DATABASE'] = "myway_test"
 app.config.from_object(__name__)
+
+
+@app.errorhandler(404)
+def resource_not_found(error):
+    return jsonify({"message": error.description}), 404
 
 
 api.add_resource(RidesList, '/api/v1/rides')  # get all rides

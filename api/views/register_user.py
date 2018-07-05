@@ -2,6 +2,7 @@ from api.modals.user import User
 from flask_restful import Resource, reqparse
 import datetime
 from flask_jwt_extended import create_access_token
+from api.tests import helpers
 
 
 class RegisterUser(Resource):
@@ -15,6 +16,20 @@ class RegisterUser(Resource):
         parser.add_argument('password', type=str, required=True, help="password field is required")
         parser.add_argument('confirm', type=str, required=True, help="password confirmation is required")
         data = parser.parse_args()
+
+        missing_fields = helpers.check_missing_field(
+            ["name", "email", "password", "confirm password"],
+            [data["name"], data["email"], data["password"], data["confirm"]]
+        )
+
+        if missing_fields:
+            return {"message:": missing_fields}, 400
+
+        if not data["name"].isalnum():
+            return {"message:": "Invalid name"}, 400
+
+        if not helpers.validate_email(data["email"]):
+            return {"message:": "Invalid email"}, 400
 
         if data["password"] != data["confirm"]:
             return {"status": "fail", "message": "Password mismatch"}, 400
@@ -35,3 +50,4 @@ class RegisterUser(Resource):
                         "message": "account created"}, 201
 
         return {"status": "fail", "message": "email already taken"}, 409
+
