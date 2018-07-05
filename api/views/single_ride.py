@@ -9,11 +9,16 @@ class SingleRide(Resource):
     @jwt_required
     def get(self, ride_id):
         """returns a ride matching a given id"""
+        ride = Ride(ride_id, None, None, None, None, None, None)
+        row = ride.get_ride()
 
-        row = Ride.get_ride(ride_id)
         if row:
-            ride = Ride(row["ride_id"], row["user_id"], row["origin"], row["destination"],
-                        row["departure_time"].strftime("%Y-%m-%d %H:%M:%S"), row["slots"], row["description"])
+            ride.user_id = row["user_id"]
+            ride.origin = row["origin"]
+            ride.destination = row["destination"]
+            ride.departure_time = row["departure_time"].strftime("%Y-%m-%d %H:%M:%S")
+            ride.slots = row["slots"]
+            ride.description = row["description"]
 
             return {"status": "success", "ride": ride.__dict__}, 200
         else:
@@ -35,6 +40,7 @@ class SingleRide(Resource):
         user_id = get_jwt_identity()
         temp_ride = Ride(None, user_id, data["origin"], data["destination"], data["departure_time"], data["slots"], data["description"])
 
-        ride_id = Ride.create_ride(temp_ride)
+        ride_id = temp_ride.create_ride()
+
         temp_ride.ride_id = ride_id
         return {"status": "success", "ride": temp_ride.__dict__}, 201

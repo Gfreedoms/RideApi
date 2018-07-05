@@ -22,7 +22,9 @@ class RegisterUser(Resource):
         user_data = User.get_user_by_email(data["email"])
         
         if not user_data:
-            User.create_user(data["name"], data["email"], data["password"])
+            user = User(None, data["name"], data["email"], data["password"], data["confirm"])
+            user.create_user()
+
             get_user = User.get_user_by_email(data["email"])
 
             if get_user:

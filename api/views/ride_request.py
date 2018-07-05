@@ -10,7 +10,8 @@ class RideRequest(Resource):
     def post(self, ride_id):
         """post method creates a ride request basing on the logged in user"""
         user_id = get_jwt_identity()
-        if Ride.get_ride(ride_id):
+        ride = Ride(ride_id)
+        if ride.get_ride():
             Ride.create_ride_request(ride_id, user_id)
             return {"status": "success", "message": "Request sent"}, 201
 
@@ -18,7 +19,8 @@ class RideRequest(Resource):
 
     @jwt_required
     def get(self, ride_id):
-        if Ride.get_ride(ride_id):
+        ride = Ride(ride_id)
+        if ride.get_ride():
             ride_requests = Ride.ride_requests(ride_id)
             if ride_requests:
                 return {"status": "success", "requests": ride_requests}, 200

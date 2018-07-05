@@ -4,7 +4,7 @@ from api.views.ride_request import RideRequest
 from api.views.register_user import RegisterUser
 from api.views.login import LoginUser
 from api.views.my_trips import MyTrips
-from api.database.database import DataBaseConnection
+from api.database.database_handler import DataBaseConnection
 from flask import Flask
 from flask_restful import Api
 from flask_jwt_extended import JWTManager
@@ -18,7 +18,8 @@ jwt = JWTManager(app)
 
 app.config['TESTING'] = False
 app.config['DEBUG'] = True
-
+app.config['DATABASE'] = "myway"
+app.config['TEST_DATABASE'] = "myway_test"
 app.config.from_object(__name__)
 
 
