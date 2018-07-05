@@ -46,13 +46,21 @@ Once the application starts running. Then you can proceed to test the applicatio
 
 These are the endpoints that are currently available
 
-* /api/v1/rides
-* /api/v1/rides/<int:ride_id>
-* /api/v1/users/rides
-* /api/v1/auth/signup
-* /api/v1/auth/login
-* /api/v1/users/rides/<int:ride_id>/requests
-* /api/v1/users/rides/<int:ride_id>/requests/<int:request_id>
+
+|__Type__| __Endpoint__ | __What the endpoint does__ | 
+|------|-------------|------------|
+|POST|  /api/v1/auth/signup       | used for signing up a user     |
+|POST| /api/v1/auth/login        | used to login into the api | 
+|POST|  /api/v1/users/rides       | used to create a new ride offer     |
+|POST|  /api/v1/rides/<int:ride_id>/requests       | used to create a request to join a given ride     |
+|GET|  /api/v1/rides/<int:ride_id>       | returns details of a given ride     |
+|GET|  /api/v1/rides        | returns all the rides in the system     |
+|GET|  /api/v1/users/rides/<int:ride_id>/requests       | returns all the requests that were made to a given ride offer     |
+|PUT|  /api/v1/users/rides/<int:ride_id>/requests/<int:request_id>      | used to accept or reject a ride join request     |
+|GET|  /api/v1/mytrips      | returns all the trips a user has even taken and the offers he/she has ever created     |
+
+
+
 
 ## Running the tests
 
