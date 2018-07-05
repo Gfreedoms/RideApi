@@ -76,7 +76,6 @@ pip install nose
 nosetests --with-coverage --cover-package=api
 ```
 
-
 ## Built With
 
 * [Flask](http://flask.pocoo.org/docs/1.0/) - Python web framework used
