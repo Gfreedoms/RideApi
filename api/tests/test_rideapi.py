@@ -1,6 +1,6 @@
 import unittest
 import json
-from api.database.database import DataBaseConnection
+from api.database.database_handler import DataBaseConnection
 from api.settings import config
 from api.tests import helpers
 from api import app
@@ -10,11 +10,12 @@ class TestRide(unittest.TestCase):
 
     def setUp(self):
         app.config['TESTING'] = True
-        app.config['DEBUG'] = False
-        connection = DataBaseConnection()
-        connection.drop_test_tables()
-        connection.create_tables()
         self.app = app.test_client()
+
+        with app.app_context():
+            connection = DataBaseConnection()
+            connection.drop_test_tables()
+            connection.create_tables()
 
     def test_configuration(self):
         self.assertTrue(config.SECRET_KEY is 'ride_api_key')
@@ -152,9 +153,10 @@ class TestRide(unittest.TestCase):
         self.assertIsInstance(users_trips_data["my_rides"], list)
 
     def tearDown(self):
-        connection = DataBaseConnection()
-        connection.drop_test_tables()
-        connection.create_tables()
+        with app.app_context():
+            connection = DataBaseConnection()
+            connection.drop_test_tables()
+            connection.create_tables()
 
 
 if __name__ == "__main__":

@@ -1,5 +1,5 @@
 from pprint import pprint
-from api.database.database import DataBaseConnection
+from api.database.database_handler import DataBaseConnection
 
 
 class Request:
@@ -18,7 +18,6 @@ class Request:
 
 
 class Ride:
-    connection = DataBaseConnection()
 
     def __init__(self, ride_id, user_id, origin, destination, departure_time, slots, description):
         self.ride_id = ride_id
@@ -29,7 +28,6 @@ class Ride:
         self.slots = slots
         self.description = description
 
-
     @staticmethod
     def create_ride(ride):
         query_string = """
@@ -37,8 +35,8 @@ class Ride:
                       VALUES (%s,%s,%s,%s,%s,%s) RETURNING ride_id;
                       """
         try:
-
-            cursor = Ride.connection.cursor
+            connection = DataBaseConnection()
+            cursor = connection.cursor
             cursor.execute(query_string, (ride.user_id, ride.origin, ride.destination,
                                           ride.departure_time, ride.slots, ride.description))
 
@@ -54,8 +52,8 @@ class Ride:
                      SELECT * FROM rides
                      """
         try:
-
-            cursor = Ride.connection.dict_cursor
+            connection = DataBaseConnection()
+            cursor = connection.dict_cursor
             cursor.execute(query_string)
             row = cursor.fetchone()
 
@@ -79,7 +77,8 @@ class Ride:
         query_string = "SELECT * FROM rides WHERE ride_id = %s "
 
         try:
-            cursor = Ride.connection.dict_cursor
+            connection = DataBaseConnection()
+            cursor = connection.dict_cursor
             cursor.execute(query_string, [ride_id])
             return cursor.fetchone()
 
@@ -91,7 +90,8 @@ class Ride:
     def create_ride_request(ride_id, user_id):
         query_string = "INSERT INTO ride_requests (ride_id,user_id,status) VALUES (%s,%s,%s)"
         try:
-            Ride.connection.cursor.execute(query_string, (ride_id, user_id, "pending"))
+            connection = DataBaseConnection()
+            connection.cursor.execute(query_string, (ride_id, user_id, "pending"))
             return True
 
         except Exception as exp:
@@ -103,7 +103,8 @@ class Ride:
         query_string = "SELECT * FROM ride_requests WHERE request_id = %s"
 
         try:
-            cursor = Ride.connection.dict_cursor
+            connection = DataBaseConnection()
+            cursor = connection.dict_cursor
             cursor.execute(query_string, (request_id,))
             row = cursor.fetchone()
             return row
@@ -117,7 +118,8 @@ class Ride:
         query_string = "SELECT * FROM rides WHERE ride_id = %s AND user_id=%s"
 
         try:
-            cursor = Ride.connection.dict_cursor
+            connection = DataBaseConnection()
+            cursor = connection.dict_cursor
             cursor.execute(query_string, (ride_id, user_id))
             row = cursor.fetchone()
             if row:
@@ -136,7 +138,8 @@ class Ride:
                         WHERE request_id=%s AND ride_id=%s
                      """
         try:
-            cursor = Ride.connection.cursor
+            connection = DataBaseConnection()
+            cursor = connection.cursor
             cursor.execute(query_string, (status, request_id, ride_id))
             return True
         except Exception as exp:
@@ -152,8 +155,8 @@ class Ride:
                 WHERE rq.ride_id=%s
                 """
         try:
-
-            dict_cursor = Ride.connection.dict_cursor
+            connection = DataBaseConnection()
+            dict_cursor = connection.dict_cursor
             dict_cursor.execute(query, (ride_id,))
             row = dict_cursor.fetchone()
             requests = []
@@ -180,8 +183,8 @@ class Ride:
             WHERE rq.user_id=%s
             """
         try:
-
-            dict_cursor = Ride.connection.dict_cursor
+            connection = DataBaseConnection()
+            dict_cursor = connection.dict_cursor
             dict_cursor.execute(my_requests, (user_id,))
             row = dict_cursor.fetchone()
             requests = []
@@ -191,7 +194,6 @@ class Ride:
                 temp_request = Request(ride, row["request_id"], row["requestor_id"], row["owner"], row["requestor"])
                 requests.append(temp_request.__dict__)
                 row = dict_cursor.fetchone()
-
 
             return requests
         except Exception as exp:
@@ -204,7 +206,8 @@ class Ride:
         """
 
         try:
-            cursor = Ride.connection.dict_cursor
+            connection = DataBaseConnection()
+            cursor = connection.dict_cursor
             cursor.execute(my_offers, [user_id])
             row = cursor.fetchone()
             offers = []

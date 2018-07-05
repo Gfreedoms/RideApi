@@ -11,11 +11,12 @@ services:
   - postgresql
 before_script:
   - psql -c 'create database myway;' -U postgres
+  - psql -c 'create database myway_test;' -U postgres
   - cd api/database
-  - python database.py
+  - python database_handler.py
   - cd ../..
 script:
-    - nosetests --with-coverage --cover-tests --cover-package=api
+    - nosetests --with-coverage --cover-package=api
     - coverage report
 after_success:
     - coveralls

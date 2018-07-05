@@ -1,18 +1,26 @@
 import psycopg2
 import psycopg2.extras as extra
 from pprint import pprint
+from flask import current_app
+from api.settings import config
 
 
 class DataBaseConnection:
-    def __init__(self, database="myway"):
-        try:
-            self.connection = psycopg2.connect(database=database, user="postgres", password="", host="localhost", port="5432")
-            self.connection.autocommit = True
-            self.cursor = self.connection.cursor()
-            self.dict_cursor = self.connection.cursor(cursor_factory=extra.DictCursor)
+    def __init__(self):
+            try:
+                if current_app.config["TESTING"]:
+                    self.connection = psycopg2.connect(database=config.TEST_DATABASE, user="postgres", password="", host="localhost", port="5432")
+                else:
+                    self.connection = psycopg2.connect(database=config.DATABASE, user="postgres", password="",
+                                                       host="localhost",
+                                                       port="5432")
 
-        except Exception as exp:
-            pprint(exp)
+                self.connection.autocommit = True
+                self.cursor = self.connection.cursor()
+                self.dict_cursor = self.connection.cursor(cursor_factory=extra.DictCursor)
+
+            except Exception as exp:
+                pprint(exp)
 
     def create_tables(self):
         # status pending,approved, rejected
