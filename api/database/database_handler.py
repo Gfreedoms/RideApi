@@ -6,14 +6,19 @@ from api.settings import config
 
 
 class DataBaseConnection:
-    def __init__(self):
+    def __init__(self,database=None):
             try:
-                if current_app.config["TESTING"]:
-                    self.connection = psycopg2.connect(database=config.TEST_DATABASE, user="postgres", password="", host="localhost", port="5432")
-                else:
-                    self.connection = psycopg2.connect(database=config.DATABASE, user="postgres", password="",
+                if database:
+                    self.connection = psycopg2.connect(database=database, user="postgres", password="",
                                                        host="localhost",
                                                        port="5432")
+                else:
+                    if current_app.config["TESTING"]:
+                        self.connection = psycopg2.connect(database=config.TEST_DATABASE, user="postgres", password="", host="localhost", port="5432")
+                    else:
+                        self.connection = psycopg2.connect(database=config.DATABASE, user="postgres", password="",
+                                                           host="localhost",
+                                                           port="5432")
 
                 self.connection.autocommit = True
                 self.cursor = self.connection.cursor()
@@ -113,5 +118,5 @@ class DataBaseConnection:
 
 
 if __name__ == "__main__":
-    db_connection = DataBaseConnection()
+    db_connection = DataBaseConnection("myway")
     db_connection.create_tables()
