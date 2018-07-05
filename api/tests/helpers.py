@@ -4,12 +4,15 @@ from api.modals.ride import Ride
 import re
 
 valid_user = User(None, "stephen", "sample1@mail.com", "123", "123")
+user_with_missing_values = User()
+user_with_malformed_email = User(None, "stephen2", "sample1mail.com", "123", "123")
 second_valid_user = User(None, "stephen", "sample2@mail.com", "333", "333")
 
 user_with_wrong_password = User(None, "", "sample1@mail.com", "344", "")
 different_passwords_user = User(None, "stephen", "sample1@mail.com", "hhd", "hhd2")
 
 valid_ride = Ride(None, None, "masaka", "mbale", "2018-06-10 13:00", 3, "This is just a sample request")
+missing_values_ride = Ride()
 
 
 def register_user(self, user):
@@ -64,6 +67,20 @@ def get_all_rides(self, auth_token):
     """method get_all_rides sends a request to return all ride offers in the system
         returns json response"""
     return self.app.get('/api/v1/rides', headers=dict(Authorization='Bearer '+auth_token),
+                        content_type='application/json')
+
+
+def update_request(self, ride_id, request_id, auth_token, status):
+    """method sends a put request to update a ride request to either accepted or rejected"""
+    return self.app.put('/api/v1/users/rides/'+str(ride_id)+'/requests/'+str(request_id),
+                        headers=dict(Authorization='Bearer '+auth_token),
+                        data=json.dumps(dict(status=status)),
+                        content_type='application/json')
+
+
+def get_ride_requests(self, ride_id, auth_token):
+    """method sends a get request to return all the requests on a given ride"""
+    return self.app.get('/api/v1/users/rides/'+str(ride_id)+'/requests', headers=dict(Authorization='Bearer '+auth_token),
                         content_type='application/json')
 
 
