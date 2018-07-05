@@ -19,7 +19,8 @@ class Request:
 
 class Ride:
 
-    def __init__(self, ride_id, user_id, origin, destination, departure_time, slots, description):
+    def __init__(self, ride_id=None, user_id=None, origin=None,
+                 destination=None, departure_time=None, slots=None, description=None):
         self.ride_id = ride_id
         self.user_id = user_id
         self.origin = origin
@@ -28,8 +29,7 @@ class Ride:
         self.slots = slots
         self.description = description
 
-    @staticmethod
-    def create_ride(ride):
+    def create_ride(self):
         query_string = """
                       INSERT INTO rides (user_id, origin, destination, departure_time, slots, description) 
                       VALUES (%s,%s,%s,%s,%s,%s) RETURNING ride_id;
@@ -37,8 +37,8 @@ class Ride:
         try:
             connection = DataBaseConnection()
             cursor = connection.cursor
-            cursor.execute(query_string, (ride.user_id, ride.origin, ride.destination,
-                                          ride.departure_time, ride.slots, ride.description))
+            cursor.execute(query_string, (self.user_id, self.origin, self.destination,
+                                          self.departure_time, self.slots, self.description))
 
             return cursor.fetchone()[0]
 
@@ -72,14 +72,13 @@ class Ride:
             pprint(exp)
             return None
 
-    @staticmethod
-    def get_ride(ride_id):
+    def get_ride(self):
         query_string = "SELECT * FROM rides WHERE ride_id = %s "
 
         try:
             connection = DataBaseConnection()
             cursor = connection.dict_cursor
-            cursor.execute(query_string, [ride_id])
+            cursor.execute(query_string, (self.ride_id,))
             return cursor.fetchone()
 
         except Exception as exp:
@@ -170,52 +169,5 @@ class Ride:
 
             return requests
 
-        except Exception as exp:
-            pprint(exp)
-
-    @staticmethod
-    def my_requests(user_id):
-        my_requests = """
-            SELECT rq.request_id,rq.status,rq.user_id as requestor_id,u.name as owner,r.*,u2.name as requestor FROM ride_requests rq
-            LEFT JOIN rides r ON (r.ride_id=rq.ride_id)
-            LEFT JOIN users u on (u.user_id=r.user_id)
-            LEFT JOIN users u2 on (u2.user_id=rq.user_id)
-            WHERE rq.user_id=%s
-            """
-        try:
-            connection = DataBaseConnection()
-            dict_cursor = connection.dict_cursor
-            dict_cursor.execute(my_requests, (user_id,))
-            row = dict_cursor.fetchone()
-            requests = []
-            while row:
-                ride = Ride(row["ride_id"], row["user_id"], row["origin"], row["destination"],
-                            row["departure_time"].strftime("%Y-%m-%d %H:%M:%S"), row["slots"], row["description"])
-                temp_request = Request(ride, row["request_id"], row["requestor_id"], row["owner"], row["requestor"])
-                requests.append(temp_request.__dict__)
-                row = dict_cursor.fetchone()
-
-            return requests
-        except Exception as exp:
-            pprint(exp)
-
-    @staticmethod
-    def my_offers(user_id):
-        my_offers = """
-        SELECT * FROM rides WHERE user_id = %s 
-        """
-
-        try:
-            connection = DataBaseConnection()
-            cursor = connection.dict_cursor
-            cursor.execute(my_offers, [user_id])
-            row = cursor.fetchone()
-            offers = []
-            while row:
-                temp_ride = Ride(row["ride_id"], row["user_id"], row["origin"], row["destination"],
-                                 row["departure_time"].strftime("%Y-%m-%d %H:%M:%S"), row["slots"], row["description"])
-                row = cursor.fetchone()
-                offers.append(temp_ride.__dict__)
-            return offers
         except Exception as exp:
             pprint(exp)

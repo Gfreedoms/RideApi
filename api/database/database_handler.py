@@ -19,6 +19,7 @@ class DataBaseConnection:
                 self.cursor = self.connection.cursor()
                 self.dict_cursor = self.connection.cursor(cursor_factory=extra.DictCursor)
 
+                self.create_tables()
             except Exception as exp:
                 pprint(exp)
 
