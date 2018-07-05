@@ -1,22 +1,32 @@
 import json
+from api.modals.user import User
+from api.modals.ride import Ride
+
+valid_user = User(None, "stephen", "sample1@mail.com", "123", "123")
+second_valid_user = User(None, "stephen", "sample2@mail.com", "333", "333")
+
+user_with_wrong_password = User(None, "", "sample1@mail.com", "344", "")
+different_passwords_user = User(None, "stephen", "sample1@mail.com", "hhd", "hhd2")
+
+valid_ride = Ride(None, None, "masaka", "mbale", "2018-06-10 13:00", 3, "This is just a sample request")
 
 
-def register_user(self, users_name, user_email, password1, password2):
+def register_user(self, user):
     """method register_user sends a request to register a user
        parameters name,email,password,confirm_password
        returns json response with users token"""
 
-    return self.app.post('/api/v1/auth/signup', data=json.dumps(dict(email=user_email, name=users_name,
-                                                                       password=password1, confirm=password2)),
+    return self.app.post('/api/v1/auth/signup', data=json.dumps(dict(email=user.email, name=user.name,
+                                                                     password=user.password, confirm=user.confirm)),
                          content_type='application/json')
 
 
-def login_user(self, user_email, password1):
+def login_user(self, user):
     """method login_user sends a request to login user
        parameters email,password
        returns json response with users token"""
 
-    return self.app.post('/api/v1/auth/login', data=json.dumps(dict(email=user_email, password=password1)),
+    return self.app.post('/api/v1/auth/login', data=json.dumps(dict(email=user.email, password=user.password)),
                          content_type='application/json')
 
 
@@ -28,14 +38,15 @@ def request_ride_join(self, ride_id, auth_token):
                          content_type='application/json')
 
 
-def post_ride_offer(self, user_token, ride_from, ride_to, dept_date, slots, description):
+def post_ride_offer(self, user_token, ride):
     """method post_ride_offer sends a request for registering a ride
        parameters users_token,from,to,date,time,slots,description
        returns json response"""
 
     return self.app.post('/api/v1/users/rides', headers=dict(Authorization='Bearer '+user_token),
-                         data=json.dumps(dict(origin=ride_from, destination=ride_to, departure_time=dept_date,
-                                              slots=slots, description=description)),
+                         data=json.dumps(dict(origin=ride.origin, destination=ride.destination,
+                                              departure_time=ride.departure_time,
+                                              slots=ride.slots, description=ride.description)),
                          content_type='application/json')
 
 
@@ -51,7 +62,7 @@ def get_particular_ride(self, ride_id, auth_token):
 def get_all_rides(self, auth_token):
     """method get_all_rides sends a request to return all ride offers in the system
         returns json response"""
-    return self.app.get('/api/v1/rides',headers=dict(Authorization='Bearer '+auth_token),
+    return self.app.get('/api/v1/rides', headers=dict(Authorization='Bearer '+auth_token),
                         content_type='application/json')
 
 
