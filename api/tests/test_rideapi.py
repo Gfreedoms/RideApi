@@ -177,7 +177,7 @@ class TestRide(unittest.TestCase):
         request_ride_data = json.loads(request_ride.data.decode())
 
         update_request = helpers.update_request(self, ride_data["ride"]["ride_id"], request_ride_data["request_id"],
-                                                second_user_data["auth_token"], "accepted")
+                                                first_user_data["auth_token"], "accepted")
 
         update_request_data = json.loads(request_ride.data.decode())
 
