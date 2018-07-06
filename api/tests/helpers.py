@@ -124,3 +124,11 @@ def validate_date(date_txt):
         return True
     except ValueError:
         return False
+
+
+def convert_to_int(value):
+    try:
+        int(value)
+        return True
+    except ValueError:
+        return False
