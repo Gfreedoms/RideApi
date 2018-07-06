@@ -13,8 +13,13 @@ class RideRequest(Resource):
         user_id = get_jwt_identity()
         ride = Ride(ride_id)
         if ride.get_ride():
-            request_id = Ride.create_ride_request(ride_id, user_id)
-            return {"status": "success", "request_id": request_id, "message": "Request sent"}, 201
+
+            if Ride.user_owns_ride(ride_id, user_id):
+                return {"status": "fail", "message": "you can't request your own ride"}, 400
+
+            else:
+                request_id = Ride.create_ride_request(ride_id, user_id)
+                return {"status": "success", "request_id": request_id, "message": "Request sent"}, 201
 
         return {"status": "fail", "message": "Ride not found"}, 404
 
