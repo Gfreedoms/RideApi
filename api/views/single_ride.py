@@ -46,6 +46,9 @@ class SingleRide(Resource):
         if missing_fields:
             return {"status": "fail", "message:": missing_fields}, 400
 
+        if not helpers.validate_date(data["departure_time"]):
+            return {"status": "fail", "message:": "Incorrect data format, should be YYYY-MM-DD HH:MM"}, 400
+
         user_id = get_jwt_identity()
         temp_ride = Ride(None, user_id, data["origin"], data["destination"], data["departure_time"], data["slots"], data["description"])
 

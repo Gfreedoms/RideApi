@@ -1,3 +1,4 @@
+import datetime
 import json
 from api.modals.user import User
 from api.modals.ride import Ride
@@ -115,3 +116,11 @@ def validate_email(email):
         return False
     else:
         return True
+
+
+def validate_date(date_txt):
+    try:
+        datetime.datetime.strptime(date_txt, '%Y-%m-%d %H:%M')
+        return True
+    except ValueError:
+        return False
