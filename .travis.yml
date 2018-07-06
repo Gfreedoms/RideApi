@@ -16,7 +16,7 @@ before_script:
   - python database_handler.py
   - cd ../..
 script:
-    - nosetests --with-coverage --cover-package=api
+    - coverage run -m unittest
     - coverage report
 after_success:
     - coveralls
