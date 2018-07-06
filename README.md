@@ -37,7 +37,7 @@ To deploy this application follow the following steps
 * clone the project from git hub
 * download [PostgreSQL](https://www.postgresql.org/) for setting up the database
 * Install PostgreSQL and setup a server 
-* create a database with a name "myway"
+* create two database with a names "myway" and "myway_test"
 * create a python virtual environment and install all the libraries in the "requirements.txt" file 
 * navigate to the root of the project and execute the application by running a command "python run.py"
 
@@ -66,13 +66,14 @@ These are the endpoints that are currently available
 
 Tests can be run by running the command below at the root of the project directory
 ```
-pytest 
+if not installed run "pip install nose" to install nose 
+then "nosetests" to run the test
 ```
+
 
 You can also get the test coverage by running the command below. this requires you to have installed nose 
 
 ```
-pip install nose
 nosetests --with-coverage --cover-package=api
 ```
 
