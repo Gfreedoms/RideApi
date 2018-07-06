@@ -17,5 +17,5 @@ class MyTrips(Resource):
 
         user_requests = user.my_requests()
 
-        return {"status": "success", "message": "successful return",
+        return {"status": "success",
                 "my_rides": user_rides, "my_requests": user_requests}, 200

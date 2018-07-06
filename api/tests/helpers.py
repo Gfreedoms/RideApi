@@ -104,10 +104,10 @@ def check_missing_field(fields, values):
 
 
 def validate_status(status):
-    if status.lower() != "accepted" or status.lower() != "rejected":
-        return False
-    else:
+    if status.lower() == "accepted" or status.lower() == "rejected":
         return True
+    else:
+        return False
 
 
 def validate_email(email):

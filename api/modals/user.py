@@ -57,13 +57,14 @@ class User:
             print(exp)
 
     def my_requests(self):
-        my_requests = """
-            SELECT rq.request_id,rq.status,rq.user_id as requestor_id,u.name as owner,r.*,u2.name as requestor FROM ride_requests rq
-            LEFT JOIN rides r ON (r.ride_id=rq.ride_id)
-            LEFT JOIN users u on (u.user_id=r.user_id)
-            LEFT JOIN users u2 on (u2.user_id=rq.user_id)
-            WHERE rq.user_id=%s
-            """
+
+        my_requests = """SELECT rq.request_id,rq.status,rq.user_id as requestor_id,rq.status,u.name as owner,u.user_id as owner_id,
+                        r.*,u2.name as requestor  FROM ride_requests rq
+                        LEFT JOIN rides r ON (r.ride_id=rq.ride_id)
+                        LEFT JOIN users u on (u.user_id=r.user_id)
+                        LEFT JOIN users u2 on (u2.user_id=rq.user_id)
+                        WHERE rq.user_id=%s
+                        """
         try:
             connection = DataBaseConnection()
             dict_cursor = connection.dict_cursor
@@ -71,9 +72,12 @@ class User:
             row = dict_cursor.fetchone()
             requests = []
             while row:
-                ride = Ride(row["ride_id"], row["user_id"], row["origin"], row["destination"],
+                ride = Ride(row["ride_id"], row["owner_id"], row["origin"], row["destination"],
                             row["departure_time"].strftime("%Y-%m-%d %H:%M:%S"), row["slots"], row["description"])
-                temp_request = Request(ride, row["request_id"], row["requestor_id"], row["owner"], row["requestor"])
+
+                temp_request = Request(ride, row["request_id"], row["requestor_id"], row["owner"], row["requestor"],
+                                       row["status"])
+
                 requests.append(temp_request.__dict__)
                 row = dict_cursor.fetchone()
 
