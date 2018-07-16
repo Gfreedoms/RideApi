@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<meta charset="utf-8">
+	
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- to take up the width of the device-->
+	<link rel="stylesheet" type="text/css" href="assets/css/styles.css">
+	
+</head>
+<body >
+	<div class="container">
+		<div class="login-div">
+			<p class="app-title">Ride My Way</p>
+			<form class="login-form" name="login" onsubmit="return validate_login()" method="post" action="index.html" >
+				<div class="input-group">
+					<label>Email <span id="email_error" class="error"></span></label>
+					<input class="form-input" type="text" name="email" id="email">
+				</div>
+				<div class="input-group">
+					<label>Password <span id="password_error" class="error"></span></label>
+					<input class="form-input" type="Password" name="password" id="password" >
+				</div>
+				<div class="input-group">
+				<input class="button blue login_btn" type="submit" name="submit_login" value="LOGIN"  />
+				</div>
+			</form>
+
+
+			<p>Don't Have an Account? <u><a href="signup.html">Sign up</a></u></p>
+
+		</div>
+	</div>
+</body>
+<script type="text/javascript" src="assets/js/formvalidation.js"></script>
+<script type="text/javascript" src="assets/js/login.js"></script>
+<script type="text/javascript">
+	window.onload = function(){
+		initialize_login_validation_elements();
+	}
+
+</script>
+</html>

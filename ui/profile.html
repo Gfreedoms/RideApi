@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- to take up the width of the device-->
+	<link rel="stylesheet" type="text/css" href="assets/css/styles.css">
+</head>
+<body >
+	<header>
+		<a href="index.html" class="header-logo">Ride My Way</a>
+		
+		<nav>
+			<ul>
+				<li><a href="index.html">Home</a></li>
+				<li><a href="trips.html">My Trips</a></li>
+				<li><a href="friends.html">Friends</a></li>
+				<li><a href="profile.html">Profile</a></li>
+			</ul>
+			<a href="login.html" class="header-right2">Byarugaba S (Log Out)</a>
+		</nav>
+		
+	</header>
+	
+	<div class="container">
+			<div>
+				<h3>Account user: Byarugaba stephen</h3>
+			</div>
+			<div class="users-left">
+			
+			<p class="count">2</p>
+
+			<h3>Rides You have offered </h3>
+			<ul class="trips_list">
+					<li>
+						<span>
+						<b>From:</b> kampala 
+						</span>
+						<span>
+						<b>To</b>: Mbaraza
+						</span>
+						<span>
+						<b>Depature time</b>:15th june 2018 9:00am 
+						</span>
+						<p class="desc">This is the description of the journey</p>
+					</li>
+					<li>
+						<span>
+						<b>From:</b> kampala 
+						</span>
+						<span>
+						<b>To</b>: Mbaraza
+						</span>
+						<span>
+						<b>Depature time</b>:15th june 2018 9:00am 
+						</span>
+						<p class="desc">This is the description of the journey</p>
+					</li>
+				</ul>
+		</div>
+		<div class="users-right">
+			<p class="count grn"><span>3</span></p>
+			<h3>Rides you have Taken </h3>
+
+			
+			<ul class="trips_list">
+					<li>
+						<span>
+						<b>From:</b> kampala 
+						<b>To</b>: Mbaraza
+						</span>
+						<span>
+						<b>Driver</b>:henry
+						</span>
+						<span>
+						<b>Depature time</b>:15th june 2018 9:00am 
+						</span>
+						<p class="desc">This is the description of the journey</p>
+					</li>
+					<li>
+						<span>
+						<b>From:</b> kasese 
+						<b>To</b>: Lira
+						</span>
+						<span>
+						<b>Driver</b>:Mike
+						</span>
+						<span>
+						<b>Depature time</b>:17th june 2018 9:00am 
+						</span>
+						<p class="desc">This is the description of the journey</p>
+					</li>
+					<li>
+						<span>
+						<b>From:</b> kampala 
+						<b>To</b>: Mbaraza
+						</span>
+						<span>
+						<b>Driver</b>:Tony
+						</span>
+						<span>
+						<b>Depature time</b>:15th june 2018 9:00am 
+						</span>
+						<p class="desc">This is the description of the journey</p>
+					</li>
+					
+				</ul>
+		</div>
+
+		<!-- The Modal -->
+		<div id="myModal" class="modal">
+
+		  <!-- Modal content -->
+			<div class="modal-content">
+			  <div class="modal-header">
+			    <span class="close">&times;</span>
+			    
+			  </div>
+			  <div class="modal-body">
+			    <h3>New Friend Requests</h3>
+			    
+				<ul class="requests">
+					<li><span>Kato Mike</span>
+					<span>
+						<a href="#" class="button green approve">Accept</a>
+						<a href="#" class="button blue decline">Reject</a>
+					</span>
+					</li>
+					<li><span>Kato Mike</span>
+					<span >
+						<a href="#" class="button green approve">Accept</a>
+						<a href="#" class="button blue decline">Reject</a>
+					</span>
+					</li>
+					<li><span>Kato Mike</span>
+					<span>
+						<a href="#" class="button green approve">Accept</a>
+						<a href="#" class="button blue decline">Reject</a>
+					</span>
+					</li>
+				</ul>
+
+			  </div>
+			  <div class="modal-footer">
+			  	<a class="button green close_btn" onclick="close_modal()">Close</a>
+
+			  </div>
+			</div>
+
+		</div>
+
+	</div>
+	
+	<footer> </footer>
+	
+
+</body>
+<script type="text/javascript">
+	
+	// Get the modal
+var modal = document.getElementById('myModal');
+
+// Get the button that opens the modal
+var btn = document.getElementById("myBtn");
+
+// Get the <span> element that closes the modal
+var span = document.getElementsByClassName("close")[0];
+
+// When the user clicks on the button, open the modal 
+
+
+function open_model(){
+	modal.style.display = "block";
+}
+
+function close_modal(){
+	modal.style.display = "none";
+}
+
+// When the user clicks on <span> (x), close the modal
+span.onclick = function() {
+    modal.style.display = "none";
+}
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function(event) {
+    if (event.target == modal) {
+        modal.style.display = "none";
+    }
+}
+</script>
+
+</html>

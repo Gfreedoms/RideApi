@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- to take up the width of the device-->
+	<link rel="stylesheet" type="text/css" href="assets/css/styles.css">
+</head>
+<body >
+	<header>
+		<a href="index.html" class="header-logo">Ride My Way</a>
+		
+		<nav>
+			<ul>
+				<li><a href="index.html">Home</a></li>
+				<li><a href="trips.html">My Trips</a></li>
+				<li><a href="friends.html">Friends</a></li>
+				<li><a href="profile.html">Profile</a></li>
+			</ul>
+			<a href="#" class="header-right button green white-text" onclick="show_post_form()" >New Ride</a>
+			<a href="signup.html" class="header-right">Signup</a>
+			<a href="login.html" class="header-right2">Byarugaba S (Log Out)</a>
+		</nav>
+		
+	</header>
+	
+	<div class="container">
+
+		<div class="index-left-div" id="index-left-div">
+			<div class="search_div">			
+				<center><h3>Searh Ride Offer</h3></center>
+				<form method="post" action="">
+					<div class="form-row"><!-- start form row  -->
+						<div class="label-col">
+							<label>From</label>
+						</div>
+						<div class="input-col">
+							<input class="form-input" type="text" name="search_from" id="search_from" />
+						</div>
+					</div>
+					<div class="form-row">
+						<div class="label-col">
+							<label>To</label>
+						</div>
+						<div class="input-col">
+							<input class="form-input" type="text" name="search_to" id="seearch_to" />
+						</div>
+					</div>
+
+					<div class="form-row">
+						<div class="label-col">
+							<label>Depature Date</label>
+						</div>
+						<div class="input-col">
+							<input class="form-input" type="text" placeholder="dd/mm/yyyy" name="date" id="date" />
+						</div>
+					</div>
+					<div class="form-row">
+						<div class="input-group">
+						<input class="button green" type="submit" name="search_ride" value="SEARCH" />
+						</div>
+					</div>	
+				</form>
+			</div>
+		</div>
+
+		<div class="right-div">
+
+			<div class="search_resuts" id="search_resuts">
+				<h3>Ride Offers</h3>
+				<ul class="trips_list">
+					
+					<li>
+						<span>
+						<b>From:</b> kampala 
+						</span>
+						<span>
+						<b>To</b>: Mbaraza
+						</span>
+						<span>
+						<b>Depature time</b>:15th june 2018 9:00am 
+						</span>
+						<p class="desc">This is the description of the journey</p>
+						<a href="" class="button blue">Send Request</a>
+					</li>
+
+					<li>
+						<span>
+						<b>From:</b> kampala 
+						</span>
+						<span>
+						<b>To</b>: Mbaraza
+						</span>
+						<span>
+						<b>Depature time</b>:15th june 2018 9:00am 
+						</span>
+						<p class="desc">This is the description of the journey</p>
+						<a href="" class="button blue">Send Request</a>
+					</li>
+
+					<li>
+						<span>
+						<b>From:</b> kampala 
+						</span>
+						<span>
+						<b>To</b>: Mbaraza
+						</span>
+						<span>
+						<b>Depature time</b>:15th june 2018 9:00am 
+						</span>
+						<p class="desc">This is the description of the journey</p>
+						<a href="" class="button blue">Send Request</a>
+					</li>
+
+					<li>
+						<span>
+						<b>From:</b> kampala 
+						</span>
+						<span>
+						<b>To</b>: Mbaraza
+						</span>
+						<span>
+						<b>Depature time</b>:15th june 2018 9:00am 
+						</span>
+						<p class="desc">This is the description of the journey</p>
+						<a href="" class="button blue">Send Request</a>
+					</li>
+					
+					
+				</ul>
+			</div>
+
+		<div class="post_offer_div" id="post_offer_div">
+			<center><h3>Post Ride Offer</h3></center>
+			<form class="post_offer" method="post" action=""
+			 onsubmit="return validate_ride_post()" >
+
+				<div class="form-row"><!-- start form row  -->
+					<div class="label-col">
+						<label>From</label>
+					</div>
+					<div class="input-col">
+						<span id="from_error" class="error"></span>
+						<input class="form-input" type="text" name="from" id="from" />
+					</div>
+				</div>
+
+				<div class="form-row">
+					<div class="label-col">
+						<label>To</label>
+					</div>
+					<div class="input-col">
+						<span id="to_error" class="error"></span>
+						<input class="form-input" type="text" name="to" id="to" />
+					</div>
+				</div>
+
+				<div class="form-row">
+					<div class="label-col">
+						<label>Depature Date</label>
+					</div>
+					<div class="input-col">
+						<span id="date_error" class="error"></span>
+						<input class="form-input" type="text" placeholder="dd/mm/yyyy" name="date" id="date" />
+					</div>
+				</div>
+
+				<div class="form-row">
+					<div class="label-col">
+						<label>Time</label>
+					</div>
+					<div class="input-col">
+						<span id="time_error" class="error"></span>
+						<input class="form-input" type="text" placeholder="10:12" name="time" id="time" />
+					</div>
+				</div>
+
+				<div class="form-row">
+					<div class="label-col">
+						<label>No. Free Seats</label>
+					</div>
+					<div class="input-col">
+						<span id="spots_error" class="error"></span>
+						<input class="form-input" type="text" placeholder="4" name="spots" id="spots"  />
+					</div>
+				</div>
+
+				<div class="form-row">
+					<div class="label-col">
+						<label>Description</label>
+					</div>
+					<div class="input-col">
+						<span id="description_error" class="error"></span>
+						<textarea class="input-text" rows="5" name="description" id="description"></textarea>
+					</div>
+				</div>
+
+				<div class="form-row">
+					<div class="input-group">
+						<input type="submit" class="button blue" value="OFFER"  />
+					</div>
+				</div><!--end form row-->
+			</form>
+		</div>
+		</div>
+
+		
+	</div>
+	
+	<footer> </footer>
+	
+
+</body>
+<script type="text/javascript" src="assets/js/main.js"></script>
+<script type="text/javascript" src="assets/js/formvalidation.js"></script>
+<script type="text/javascript">
+	window.onload = function(){
+		initialise();
+		initialise_index_validations();
+   		
+ 	}
+</script>
+</html>
