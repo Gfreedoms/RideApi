@@ -34,6 +34,7 @@
 		</div>
 	</div>
 </body>
+<script type="text/javascript" src="assets/js/global.js"></script>
 <script type="text/javascript" src="assets/js/formvalidation.js"></script>
 <script type="text/javascript" src="assets/js/cookies.js"></script>
 
@@ -53,9 +54,8 @@
 
 			if(validate_login()){
 				e.preventDefault();
-
-				fetch("http://127.0.0.1:5000/api/v1/auth/login",{
-
+				var url=SERVER_PATH+"api/v1/auth/login";
+				fetch(url,{
 					method: 'POST',
 				    headers: {
 				      'Content-Type': 'application/json'

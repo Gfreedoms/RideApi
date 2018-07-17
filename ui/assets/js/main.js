@@ -23,11 +23,9 @@ function initialise(){
 	show_element("search_resuts");
 	hide_element("post_offer_div");
 	// hide all error inputs
-
 }
 
 function show_post_form(){
 	show_element("post_offer_div");
 	hide_element("search_resuts");
 }
-

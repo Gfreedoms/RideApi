@@ -81,6 +81,7 @@
 
 
 </body>
+<script type="text/javascript" src="assets/js/global.js"></script>
 <script type="text/javascript" src="assets/js/formvalidation.js"></script>
 <script type="text/javascript" src="assets/js/cookies.js"></script>
 
@@ -100,8 +101,8 @@
 
 			if(validate_signup()){
 				e.preventDefault();
-
-				fetch("http://127.0.0.1:5000/api/v1/auth/signup",{
+				var url=SERVER_PATH+"api/v1/auth/signup";
+				fetch(url,{
 
 					method: 'POST',
 				    headers: {

@@ -112,7 +112,7 @@ function initialize_login_validation_elements(){
 	email=document.getElementById("email");
 	password=document.getElementById("password");
 
-	//add blur event 
+	//add blur event
 	email.addEventListener("blur",emailValidator,true);
 	password.addEventListener("blur",passwordValidator,true);
 
@@ -138,13 +138,9 @@ function initialise_signup_validation_elements(){
 	password_error=document.getElementById("password_error");
 	password_error2=document.getElementById("password_error2");
 
-	// name_error.style.visibility="hidden";
-	// email_error.style.visibility="hidden";
-	// password_error.style.visibility="hidden";
-	// password_error2.style.visibility="hidden";
 }
 
-// to validate login inputs 
+// to validate login inputs
 function validate_login(){
 	var reg=/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 
@@ -154,7 +150,7 @@ function validate_login(){
 		email_error.textContent="* email is required";
 		email.focus()
 		return false;
-		
+
 	}else if(!reg.test(email.value)){
 		email.style.border="1px solid #d63031";
 		email_error.style.visibility="visible";
@@ -176,7 +172,7 @@ function validate_login(){
 
 // to validate signup inputs
 function validate_signup(){
-	
+
 	if(uname.value==""){
 		uname.style.border="1px solid #d63031";
 		name_error.style.visibility="visible";
@@ -193,7 +189,7 @@ function validate_signup(){
 		email_error.textContent="* email is required";
 		email.focus()
 		return false;
-		
+
 	}else if(!reg.test(email.value)){
 		email.style.border="1px solid #d63031";
 		email_error.style.visibility="visible";
@@ -228,7 +224,7 @@ function validate_signup(){
 	return true;
 }
 
-// called on blur to check if name field has been filled such that errors styles 
+// called on blur to check if name field has been filled such that errors styles
 // can be removed
 function nameValidator(){
 	if(uname.value!=""){
@@ -239,31 +235,31 @@ function nameValidator(){
 	}
 }
 
-// called on blur to check if email field has been filled such that errors styles 
+// called on blur to check if email field has been filled such that errors styles
 // can be removed
 function emailValidator(){
 	if(email.value!=""){
 		email.style.border="1px solid #d1d5da";
 		email_error.innerHtml=""
 		email_error.style.visibility="hidden";
-		
+
 		return true;
 	}
 }
 
-// called on blur to check if password field has been filled such that errors styles 
+// called on blur to check if password field has been filled such that errors styles
 // can be removed
 function passwordValidator(){
 	if(password.value!=""){
 		password.style.border="1px solid #d1d5da"
 		password_error.innerHtml=""
 		password_error.style.visibility="hidden";
-		
+
 		return true;
 	}
 }
 
-// called on blur to check if confirm password field has been filled such that errors styles 
+// called on blur to check if confirm password field has been filled such that errors styles
 // can be removed
 function confirmValidator(){
 	if(confirm_password.value!=""){
@@ -271,79 +267,79 @@ function confirmValidator(){
 		confirm_password.style.border="1px solid #d1d5da"
 		password_error2.innerHtml=""
 		password_error2.style.visibility="hidden";
-		
+
 		return true;
 	}
 }
 
-// called on blur to check if from field has been filled such that errors styles 
+// called on blur to check if from field has been filled such that errors styles
 // can be removed
 function fromValidator(){
 	if(from_input.value!=""){
 		from_input.style.border="1px solid #d1d5da"
 		from_error.innerHtml=""
 		from_error.style.visibility="hidden";
-		
+
 		return true;
 	}
 }
 
-// called on blur to check if to field has been filled such that errors styles 
+// called on blur to check if to field has been filled such that errors styles
 // can be removed
 function toValidator(){
 	if(to_input.value!=""){
 		to_input.style.border="1px solid #d1d5da"
 		to_error.innerHtml=""
 		to_error.style.visibility="hidden";
-		
+
 		return true;
 	}
 }
 
-// called on blur to check if date field has been filled such that errors styles 
+// called on blur to check if date field has been filled such that errors styles
 // can be removed
 function dateValidator(){
 	if(date_input.value!=""){
 		date_input.style.border="1px solid #d1d5da"
 		date_error.innerHtml=""
 		date_error.style.visibility="hidden";
-		
+
 		return true;
 	}
-} 
+}
 
-// called on blur to check if time field has been filled such that errors styles 
+// called on blur to check if time field has been filled such that errors styles
 // can be removed
 function timeValidator(){
 	if(time_input.value!=""){
 		time_input.style.border="1px solid #d1d5da"
 		time_error.innerHtml=""
 		time_error.style.visibility="hidden";
-		
+
 		return true;
 	}
-} 
+}
 
-// called on blur to check if spots field has been filled such that errors styles 
+// called on blur to check if spots field has been filled such that errors styles
 // can be removed
 function spotsValidator(){
 	if(spots.value!=""){
 		spots.style.border="1px solid #d1d5da"
 		spots_error.innerHtml=""
 		spots_error.style.visibility="hidden";
-		
+
 		return true;
 	}
-} 
+}
 
-// called on blur to check if description field has been filled such that errors styles 
+// called on blur to check if description field has been filled such that errors styles
 // can be removed
 function descriptionValidator(){
 	if(description.value!=""){
 		description.style.border="1px solid #d1d5da"
 		description_error.innerHtml=""
 		description_error.style.visibility="hidden";
-		
+
 		return true;
 	}
 }

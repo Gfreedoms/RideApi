@@ -167,6 +167,7 @@
 
 
 </body>
+<script type="text/javascript" src="assets/js/global.js"></script>
 <script type="text/javascript" src="assets/js/main.js"></script>
 <script type="text/javascript" src="assets/js/formvalidation.js"></script>
 <script type="text/javascript" src="assets/js/cookies.js"></script>
@@ -182,7 +183,8 @@
  	}
 
 	function fetch_all_rides(){
-		fetch("http://127.0.0.1:5000/api/v1/rides",{
+		var url=SERVER_PATH+"api/v1/rides";
+		fetch(url,{
 
 					method: 'GET',
 						headers: {
@@ -212,7 +214,7 @@
 										"<b>Depature time</b>: "+rides[i]["departure_time"]+
 										"</span>"+
 										"<p class='desc'>"+rides[i]["description"]+"</p>"+
-										"<a href='#' onclick='"+request_ride_join(rides[i]["ride_id"])+"' class='button blue'>Send Request</a>"+
+										"<a href='#' onclick='request_ride_join("+rides[i]["ride_id"]+")' class='button blue'>Send Request</a>"+
 										"</li>";
 
 				 rides_list=rides_list+temp_ride;
@@ -228,7 +230,26 @@
 	}
 
 	function request_ride_join(ride_id){
-			
+		var url=SERVER_PATH+"api/v1/rides/"+ride_id+"/requests";
+		
+		fetch(url,{
+					method: 'POST',
+						headers: {
+							'Content-Type': 'application/json',
+							'authorization':'Bearer '+get_cookie('auth_token')
+							}
+				})
+		.then(function(response){
+			return response.json()
+		})
+		.then(function(data){
+			alert(data.message);
+
+		})
+		.catch(function(error){
+			console.log("error",error);
+		})
+
 
 	}
 
