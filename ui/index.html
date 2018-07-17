@@ -8,7 +8,7 @@
 <body >
 	<header>
 		<a href="index.html" class="header-logo">Ride My Way</a>
-		
+
 		<nav>
 			<ul>
 				<li><a href="index.html">Home</a></li>
@@ -20,13 +20,13 @@
 			<a href="signup.html" class="header-right">Signup</a>
 			<a href="login.html" class="header-right2">Byarugaba S (Log Out)</a>
 		</nav>
-		
+
 	</header>
-	
+
 	<div class="container">
 
 		<div class="index-left-div" id="index-left-div">
-			<div class="search_div">			
+			<div class="search_div">
 				<center><h3>Searh Ride Offer</h3></center>
 				<form method="post" action="">
 					<div class="form-row"><!-- start form row  -->
@@ -58,7 +58,7 @@
 						<div class="input-group">
 						<input class="button green" type="submit" name="search_ride" value="SEARCH" />
 						</div>
-					</div>	
+					</div>
 				</form>
 			</div>
 		</div>
@@ -67,65 +67,22 @@
 
 			<div class="search_resuts" id="search_resuts">
 				<h3>Ride Offers</h3>
-				<ul class="trips_list">
-					
+				<ul class="trips_list" id="trips_list">
+
 					<li>
 						<span>
-						<b>From:</b> kampala 
+						<b>From:</b> kampala
 						</span>
 						<span>
 						<b>To</b>: Mbaraza
 						</span>
 						<span>
-						<b>Depature time</b>:15th june 2018 9:00am 
+						<b>Depature time</b>:15th june 2018 9:00am
 						</span>
 						<p class="desc">This is the description of the journey</p>
 						<a href="" class="button blue">Send Request</a>
 					</li>
 
-					<li>
-						<span>
-						<b>From:</b> kampala 
-						</span>
-						<span>
-						<b>To</b>: Mbaraza
-						</span>
-						<span>
-						<b>Depature time</b>:15th june 2018 9:00am 
-						</span>
-						<p class="desc">This is the description of the journey</p>
-						<a href="" class="button blue">Send Request</a>
-					</li>
-
-					<li>
-						<span>
-						<b>From:</b> kampala 
-						</span>
-						<span>
-						<b>To</b>: Mbaraza
-						</span>
-						<span>
-						<b>Depature time</b>:15th june 2018 9:00am 
-						</span>
-						<p class="desc">This is the description of the journey</p>
-						<a href="" class="button blue">Send Request</a>
-					</li>
-
-					<li>
-						<span>
-						<b>From:</b> kampala 
-						</span>
-						<span>
-						<b>To</b>: Mbaraza
-						</span>
-						<span>
-						<b>Depature time</b>:15th june 2018 9:00am 
-						</span>
-						<p class="desc">This is the description of the journey</p>
-						<a href="" class="button blue">Send Request</a>
-					</li>
-					
-					
 				</ul>
 			</div>
 
@@ -203,20 +160,78 @@
 		</div>
 		</div>
 
-		
+
 	</div>
-	
+
 	<footer> </footer>
-	
+
 
 </body>
 <script type="text/javascript" src="assets/js/main.js"></script>
 <script type="text/javascript" src="assets/js/formvalidation.js"></script>
+<script type="text/javascript" src="assets/js/cookies.js"></script>
+
 <script type="text/javascript">
 	window.onload = function(){
 		initialise();
 		initialise_index_validations();
-   		
+
+		fetch_all_rides();
+
+
  	}
+
+	function fetch_all_rides(){
+		fetch("http://127.0.0.1:5000/api/v1/rides",{
+
+					method: 'GET',
+						headers: {
+							'Content-Type': 'application/json',
+							'authorization':'Bearer '+get_cookie('auth_token')
+							}
+				})
+		.then(function(response){
+			return response.json()
+		})
+		.then(function(data){
+
+			if(data.status=="success"){
+				//store token and redirect
+				console.log("data ",data);
+				rides=data.rides;
+				rides_list=""
+				for(var i=0; i<rides.length; i++){
+					temp_ride="<li>"+
+										"<span>"+
+										"<b>From:</b> "+rides[i]["origin"]+
+										"</span>"+
+										"<span>"+
+										"<b>To</b>: "+rides[i]["destination"]+
+										"</span>"+
+										"<span>"+
+										"<b>Depature time</b>: "+rides[i]["departure_time"]+
+										"</span>"+
+										"<p class='desc'>"+rides[i]["description"]+"</p>"+
+										"<a href='#' onclick='"+request_ride_join(rides[i]["ride_id"])+"' class='button blue'>Send Request</a>"+
+										"</li>";
+
+				 rides_list=rides_list+temp_ride;
+				}
+				document.getElementById("trips_list").innerHTML=rides_list
+			}else{
+				console.log("Data ",data.message)
+			}
+		})
+		.catch(function(error){
+			console.log("Error ",error)
+		})
+	}
+
+	function request_ride_join(ride_id){
+			
+
+	}
+
+
 </script>
 </html>
