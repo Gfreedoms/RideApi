@@ -97,48 +97,47 @@
 		    signup_form.attachEvent('onsubmit', submit_signup_form); //Old IE
 		}
 
-		function submit_signup_form(e){
-
-			if(validate_signup()){
-				e.preventDefault();
-				var url=SERVER_PATH+"api/v1/auth/signup";
-				fetch(url,{
-
-					method: 'POST',
-				    headers: {
-				      'Content-Type': 'application/json'
-				    },
-					body:JSON.stringify({
-						"email":document.getElementById("email").value,
-						"name":document.getElementById("name").value,
-						"password":document.getElementById("password").value,
-						"confirm":document.getElementById("confirm_password").value
-						})
-				})
-				.then(function(response){
-					return response.json()
-				})
-				.then(function(data){
-
-					if(data.status=="success"){
-						create_cookie("auth_token",data.auth_token,1);
-						window.location.href = "index.html";
-					}else{
-						error_label=document.getElementById("server_error");
-						error_label.style.visibility='visible';
-						error_label.textContent=data.message
-						console.log("Data ",data.message)
-					}
-				})
-				.catch(function(error){
-					console.log(error)
-				})
-
-			}
-		}
-
-
  	}
+
+	function submit_signup_form(e){
+
+		if(validate_signup()){
+			e.preventDefault();
+			var url=SERVER_PATH+"api/v1/auth/signup";
+			fetch(url,{
+
+				method: 'POST',
+					headers: {
+						'Content-Type': 'application/json'
+					},
+				body:JSON.stringify({
+					"email":document.getElementById("email").value,
+					"name":document.getElementById("name").value,
+					"password":document.getElementById("password").value,
+					"confirm":document.getElementById("confirm_password").value
+					})
+			})
+			.then(function(response){
+				return response.json()
+			})
+			.then(function(data){
+
+				if(data.status=="success"){
+					create_cookie("auth_token",data.auth_token,1);
+					window.location.href = "index.html";
+				}else{
+					error_label=document.getElementById("server_error");
+					error_label.style.visibility='visible';
+					error_label.textContent=data.message
+					console.log("Data ",data.message)
+				}
+			})
+			.catch(function(error){
+				console.log(error)
+			})
+
+		}
+	}
 
 
 

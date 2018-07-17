@@ -14,14 +14,12 @@ var password_error2;
 var from_input;
 var to_input;
 var date_input;
-var time_input;
 var spots;
 var description;
 
 var from_error;
 var to_error;
 var date_error;
-var time_error;
 var spots_error;
 var description_error;
 
@@ -32,7 +30,6 @@ function initialise_index_validations(){
 	from_input=document.getElementById("from");
 	to_input=document.getElementById("to");
 	date_input=document.getElementById("date");
-	time_input=document.getElementById("time");
 	spots=document.getElementById("spots");
 	description=document.getElementById("description");
 
@@ -41,7 +38,7 @@ function initialise_index_validations(){
 	from_input.addEventListener("blur",fromValidator,true);
 	to_input.addEventListener("blur",toValidator,true);
 	date_input.addEventListener("blur",dateValidator,true);
-	time_input.addEventListener("blur",timeValidator,true);
+
 	spots.addEventListener("blur",spotsValidator,true);
 	description.addEventListener("blur",descriptionValidator,true);
 
@@ -49,7 +46,6 @@ function initialise_index_validations(){
 	from_error=document.getElementById("from_error");
 	to_error=document.getElementById("to_error");
 	date_error=document.getElementById("date_error");
-	time_error=document.getElementById("time_error");
 	spots_error=document.getElementById("spots_error");
 	description_error=document.getElementById("description_error");
 }
@@ -79,15 +75,6 @@ function validate_ride_post(){
 		return false;
 	}
 
-
-	if(time_input.value==""){
-		time_input.style.border="1px solid #d63031";
-		time_error.style.visibility="visible";
-		time_error.textContent="* depature time is required";
-		time_input.focus()
-		return false;
-	}
-
 	if(spots.value==""){
 		spots.style.border="1px solid #d63031";
 		spots_error.style.visibility="visible";
@@ -103,7 +90,7 @@ function validate_ride_post(){
 		description.focus()
 		return false;
 	}
-
+	return true;
 }
 
 
@@ -308,17 +295,6 @@ function dateValidator(){
 	}
 }
 
-// called on blur to check if time field has been filled such that errors styles
-// can be removed
-function timeValidator(){
-	if(time_input.value!=""){
-		time_input.style.border="1px solid #d1d5da"
-		time_error.innerHtml=""
-		time_error.style.visibility="hidden";
-
-		return true;
-	}
-}
 
 // called on blur to check if spots field has been filled such that errors styles
 // can be removed

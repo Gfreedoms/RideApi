@@ -50,45 +50,45 @@
 		    login_form.attachEvent('onsubmit', submit_login_form);
 		}
 
-		function submit_login_form(e){
+	}
 
-			if(validate_login()){
-				e.preventDefault();
-				var url=SERVER_PATH+"api/v1/auth/login";
-				fetch(url,{
-					method: 'POST',
-				    headers: {
-				      'Content-Type': 'application/json'
-				    },
-					body:JSON.stringify({
-						"email":document.getElementById("email").value,
-						"password":document.getElementById("password").value
-						})
-				})
-				.then(function(response){
-					return response.json()
-				})
-				.then(function(data){
+	function submit_login_form(e){
 
-					if(data.status=="success"){
-						//store token and redirect
-						create_cookie("auth_token",data.auth_token,1);
+		if(validate_login()){
+			e.preventDefault();
+			var url=SERVER_PATH+"api/v1/auth/login";
+			fetch(url,{
+				method: 'POST',
+					headers: {
+						'Content-Type': 'application/json'
+					},
+				body:JSON.stringify({
+					"email":document.getElementById("email").value,
+					"password":document.getElementById("password").value
+					})
+			})
+			.then(function(response){
+				return response.json()
+			})
+			.then(function(data){
 
-						window.location.href = "index.html";
-					}else{
-						error_label=document.getElementById("server_error");
-						error_label.style.visibility='visible';
-						error_label.textContent=data.message
-						console.log("Data ",data.message)
-					}
-				})
-				.catch(function(error){
-					console.log("Error ",error)
-				})
+				if(data.status=="success"){
+					//store token and redirect
+					create_cookie("auth_token",data.auth_token,1);
 
-			}
+					window.location.href = "index.html";
+				}else{
+					error_label=document.getElementById("server_error");
+					error_label.style.visibility='visible';
+					error_label.textContent=data.message
+					console.log("Data ",data.message)
+				}
+			})
+			.catch(function(error){
+				console.log("Error ",error)
+			})
+
 		}
-
 	}
 
 </script>
