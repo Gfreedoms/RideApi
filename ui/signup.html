@@ -44,6 +44,7 @@
 			</div>
 			<div class="signup-div">
 				<h3>Signup for Ride My Way</h3>
+				<label id="server_error" class="error"></label>
 				<form id="signup_form" class="signup-form" name="signup" 
 				onsubmit="return validate_signup()" method="post" action="index.html" >
 					<div class="input-group">
@@ -84,6 +85,7 @@
 <script type="text/javascript">
 	window.onload = function(){
    		initialise_signup_validation_elements();
+   		document.getElementById("server_error").style.visibility='hidden';
 
    		var signup_form = document.getElementById("signup_form");
 		if(signup_form.addEventListener){
@@ -94,7 +96,7 @@
 
 		function submit_signup_form(e){
 
-			if(validate_signup){
+			if(validate_signup()){
 				e.preventDefault();
 
 				fetch("http://127.0.0.1:5000/api/v1/auth/signup",{
@@ -114,14 +116,15 @@
 					return response.json()
 				})
 				.then(function(data){
-					console.log(data)
+					
 					if(data.status=="success"){
 						//store token and redirect
 						window.location.href = "index.html";
 					}else{
-						name_error=document.getElementById("name_error")
-						name_error.style.visibility="visible"
-						name_error.textContent=data.message
+						error_label=document.getElementById("server_error");
+						error_label.style.visibility='visible';
+						error_label.textContent=data.message
+						console.log("Data ",data.message)
 					}
 				})
 				.catch(function(error){

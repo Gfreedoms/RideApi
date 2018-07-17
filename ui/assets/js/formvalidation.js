@@ -170,6 +170,8 @@ function validate_login(){
 		password.focus()
 		return false;
 	}
+
+	return true;
 }
 
 // to validate signup inputs
@@ -223,6 +225,7 @@ function validate_signup(){
 		return false;
 	}
 
+	return true;
 }
 
 // called on blur to check if name field has been filled such that errors styles 
