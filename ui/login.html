@@ -3,10 +3,10 @@
 <head>
 	<title></title>
 	<meta charset="utf-8">
-	
+
 	<meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- to take up the width of the device-->
 	<link rel="stylesheet" type="text/css" href="assets/css/styles.css">
-	
+
 </head>
 <body >
 	<div class="container">
@@ -35,6 +35,7 @@
 	</div>
 </body>
 <script type="text/javascript" src="assets/js/formvalidation.js"></script>
+<script type="text/javascript" src="assets/js/cookies.js"></script>
 
 <script type="text/javascript">
 	window.onload = function(){
@@ -43,9 +44,9 @@
 
 		var login_form = document.getElementById("login_form");
 		if(login_form.addEventListener){
-		    login_form.addEventListener("submit", submit_login_form, false);  
+		    login_form.addEventListener("submit", submit_login_form, false);
 		}else if(login_form.attachEvent){
-		    login_form.attachEvent('onsubmit', submit_login_form); 
+		    login_form.attachEvent('onsubmit', submit_login_form);
 		}
 
 		function submit_login_form(e){
@@ -68,9 +69,11 @@
 					return response.json()
 				})
 				.then(function(data){
-					
+
 					if(data.status=="success"){
 						//store token and redirect
+						create_cookie("auth_token",data.auth_token,1);
+
 						window.location.href = "index.html";
 					}else{
 						error_label=document.getElementById("server_error");

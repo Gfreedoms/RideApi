@@ -3,10 +3,10 @@
 <head>
 	<title></title>
 	<meta charset="utf-8">
-	
+
 	<meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- to take up the width of the device-->
 	<link rel="stylesheet" type="text/css" href="assets/css/styles.css">
-	
+
 </head>
 <body>
 	<header>
@@ -18,13 +18,13 @@
 				<li><a href="friends.html">Friends</a></li>
 				<li><a href="profile.html">Profile</a></li>
 			</ul>
-			
+
 			<a href="login.html" class="header-right2">Byarugaba S (Log Out)</a>
 		</nav>
-		
+
 	</header>
 	<div class="container">
-		
+
 			<div class="left-div">
 				<div class="inner-left">
 					<div class="text-div">
@@ -37,7 +37,7 @@
 							<li>Passangers can request to join a ride</li>
 							<li>Drivers can either accept or reject a ride request</li>
 							<li>Passangers get notified if their requests are approved or rejected</li>
-							
+
 						</ul>
 					</div>
 				</div>
@@ -45,43 +45,45 @@
 			<div class="signup-div">
 				<h3>Signup for Ride My Way</h3>
 				<label id="server_error" class="error"></label>
-				<form id="signup_form" class="signup-form" name="signup" 
+				<form id="signup_form" class="signup-form" name="signup"
 				onsubmit="return validate_signup()" method="post" action="index.html" >
 					<div class="input-group">
 						<label>Name <span id="name_error" class="error"></span></label>
 						<input class="form-input" type="text" name="name" id="name" />
-						
+
 					</div>
 					<div class="input-group">
 						<label>Email <span id="email_error" class="error"></span></label>
 						<input class="form-input" type="text" name="email" id="email" />
-						
+
 					</div>
 					<div class="input-group">
 						<label>
 						Password <span id="password_error" class="error"></span>
 						</label>
 						<input class="form-input" type="Password" name="password" id="password" />
-						
+
 					</div>
 					<div class="input-group">
 						<label>
 							Confirm Password <span id="password_error2" class="error"></span>
 						</label>
 						<input class="form-input" type="Password" name="confirm_password" id="confirm_password" >
-						
+
 					</div>
 					<div class="input-group">
 					<input type="submit" class="button blue"  name="signup" value="SIGNUP" />
 					</div>
 				</form>
 			</div>
-		
+
 	</div>
 
-	
+
 </body>
 <script type="text/javascript" src="assets/js/formvalidation.js"></script>
+<script type="text/javascript" src="assets/js/cookies.js"></script>
+
 <script type="text/javascript">
 	window.onload = function(){
    		initialise_signup_validation_elements();
@@ -89,7 +91,7 @@
 
    		var signup_form = document.getElementById("signup_form");
 		if(signup_form.addEventListener){
-		    signup_form.addEventListener("submit", submit_signup_form, false);  //Modern 
+		    signup_form.addEventListener("submit", submit_signup_form, false);  //Modern
 		}else if(signup_form.attachEvent){
 		    signup_form.attachEvent('onsubmit', submit_signup_form); //Old IE
 		}
@@ -100,7 +102,7 @@
 				e.preventDefault();
 
 				fetch("http://127.0.0.1:5000/api/v1/auth/signup",{
-					
+
 					method: 'POST',
 				    headers: {
 				      'Content-Type': 'application/json'
@@ -116,9 +118,9 @@
 					return response.json()
 				})
 				.then(function(data){
-					
+
 					if(data.status=="success"){
-						//store token and redirect
+						create_cookie("auth_token",data.auth_token,1);
 						window.location.href = "index.html";
 					}else{
 						error_label=document.getElementById("server_error");
