@@ -33,21 +33,13 @@
 						<th>To</th>
 						<th>Departure Date</th>
 						<th>Time</th>
+						<th>No. Slots</th>
 						<th>No. Requests</th>
 						<th>Action</th>
 					</tr>
 				</thead>
 
 				<tbody id="users_posted_offers">
-
-					<tr>
-						<td>sample, Ug</td>
-						<td>Mabarara, Ug</td>
-						<td>7/06/2018</td>
-						<td>08:00</td>
-						<td><span class="no">4</span></td>
-						<td><a href="#" class="button blue" onclick="open_model()">Manage Trip</a></td>
-					</tr>
 
 				</tbody>
 			</table>
@@ -68,15 +60,6 @@
 				</thead>
 
 				<tbody id="users_requests">
-					<tr>
-						<td>Kampala, Ug</td>
-						<td>Mabarara, Ug</td>
-						<td>7/06/2018</td>
-						<td>08:00</td>
-						<td>Kato Mike</td>
-						<td>Approved</td>
-					</tr>
-
 
 
 				</tbody>
@@ -94,26 +77,9 @@
 			  </div>
 			  <div class="modal-body">
 			    <h3>Ride Requests</h3>
-			    <p>Remaing spots:4</p>
-				<ul class="requests">
-					<li><span>Kato Mike</span>
-					<span>
-						<a href="#" class="button green approve">Approve</a>
-						<a href="#" class="button blue decline">Decline</a>
-					</span>
-					</li>
-					<li><span>Kato Mike</span>
-					<span >
-						<a href="#" class="button green approve">Approve</a>
-						<a href="#" class="button blue decline">Decline</a>
-					</span>
-					</li>
-					<li><span>Kato Mike</span>
-					<span>
-						<a href="#" class="button green approve">Approve</a>
-						<a href="#" class="button blue decline">Decline</a>
-					</span>
-					</li>
+			    <p>Remaing spots:<span id="remain_slots">4</span></p>
+				<ul class="requests" id="ride_requests">
+
 				</ul>
 
 			  </div>
@@ -137,7 +103,8 @@
 	var btn = document.getElementById("myBtn");
 	var span = document.getElementsByClassName("close")[0];
 
-	function open_model(){
+	function open_model(ride_id){
+		fetch_ride_requests(ride_id);
 		modal.style.display = "block";
 	}
 
@@ -156,9 +123,81 @@
 	}
 
 	window.onload = function(){
-
 		fetch_my_trips();
  	}
+
+	function fetch_ride_requests(ride_id){
+
+		var url=SERVER_PATH+"api/v1/users/rides/"+ride_id+"/requests";
+		fetch(url,{
+			method:"GET",
+			headers: {
+				'Content-Type': 'application/json',
+				'authorization':'Bearer '+get_cookie('auth_token')
+				}
+		}
+		)
+		.then(function(response){
+			return response.json();
+		})
+		.then(function(data){
+			console.log("data ",data)
+			if(data.status=="success"){
+				var requests=data.requests;
+				var display_string="";
+				document.getElementById("remain_slots").innerHTML=(requests[0]["slots"]-requests.length)+"/"+requests[0]["slots"];
+
+				for(var i=0;i<requests.length;i++){
+					var request=requests[i];
+					display_string+="<li><span>"+request["requestor_name"]+"</span>"+
+													"<span>";
+					if(request["status"]=="pending"){
+							display_string+="	<a href='#' class='button green approve' onclick=\"repond_to_request("+request["ride_id"]+","+request["request_id"]+",'accepted')\" >Approve</a>"+
+														"	<a href='#' class='button blue decline' onclick=\"repond_to_request("+request["ride_id"]+","+request["request_id"]+",'rejected')\">Decline</a>";
+					}else{
+						display_string+="<h3>"+request["status"]+"</h3>";
+					}
+						display_string+="</span>"+
+													"</li>";
+				}
+				document.getElementById("ride_requests").innerHTML=display_string;
+			}
+		})
+		.catch(function(error){
+			console.log("error ",error)
+		})
+
+	}
+
+	function repond_to_request(ride_id,request_id,status){
+		var url=SERVER_PATH+"api/v1/users/rides/"+ride_id+"/requests/"+request_id;
+		fetch(url,{
+			method:"PUT",
+			headers: {
+				'Content-Type': 'application/json',
+				'authorization':'Bearer '+get_cookie('auth_token')
+			},
+			body:JSON.stringify({
+				"status":status
+			})
+		}
+		)
+		.then(function(response){
+			return response.json();
+		})
+		.then(function(data){
+			console.log("data",data)
+			if(data.status=="success"){
+				// close_modal();
+				fetch_ride_requests(ride_id);
+			}else{
+				alert(data.message);
+			}
+		})
+		.catch(function(error){
+			console.log("error ",error)
+		})
+	}
 
 	function fetch_my_trips(){
 		var url=SERVER_PATH+"api/v1/mytrips";
@@ -184,8 +223,9 @@
 											"<td>"+users_offers[i]["destination"]+"</td>"+
 											"<td>"+users_offers[i]["departure_time"].split(" ")[0]+"</td>"+
 											"<td>"+users_offers[i]["departure_time"].split(" ")[1]+"</td>"+
-											"<td><span class='no'>"+users_offers[i]["slots"]+"</span></td>"+//ride_id
-											"<td><a href='#' class='button blue' onclick='open_model()'>Manage Trip</a></td>"+
+											"<td><span class='no'>"+users_offers[i]["slots"]+"</span></td>"+//
+											"<td></td>"+
+											"<td><a href='#' class='button blue' onclick='open_model("+users_offers[i]["ride_id"]+")'>Manage Trip</a></td>"+
 										"</tr>";
 				 offers_list=offers_list+temp_ride;
 				}

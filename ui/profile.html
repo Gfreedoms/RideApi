@@ -8,7 +8,7 @@
 <body >
 	<header>
 		<a href="index.html" class="header-logo">Ride My Way</a>
-		
+
 		<nav>
 			<ul>
 				<li><a href="index.html">Home</a></li>
@@ -18,175 +18,115 @@
 			</ul>
 			<a href="login.html" class="header-right2">Byarugaba S (Log Out)</a>
 		</nav>
-		
+
 	</header>
-	
+
 	<div class="container">
 			<div>
 				<h3>Account user: Byarugaba stephen</h3>
 			</div>
 			<div class="users-left">
-			
-			<p class="count">2</p>
+
+			<p class="count" id="offered_rides_count">2</p>
 
 			<h3>Rides You have offered </h3>
-			<ul class="trips_list">
-					<li>
-						<span>
-						<b>From:</b> kampala 
-						</span>
-						<span>
-						<b>To</b>: Mbaraza
-						</span>
-						<span>
-						<b>Depature time</b>:15th june 2018 9:00am 
-						</span>
-						<p class="desc">This is the description of the journey</p>
-					</li>
-					<li>
-						<span>
-						<b>From:</b> kampala 
-						</span>
-						<span>
-						<b>To</b>: Mbaraza
-						</span>
-						<span>
-						<b>Depature time</b>:15th june 2018 9:00am 
-						</span>
-						<p class="desc">This is the description of the journey</p>
-					</li>
-				</ul>
+			<ul class="trips_list" id="offered_rides">
+			</ul>
 		</div>
 		<div class="users-right">
-			<p class="count grn"><span>3</span></p>
+			<p class="count grn"><span id="taken_rides_count">3</span></p>
 			<h3>Rides you have Taken </h3>
 
-			
-			<ul class="trips_list">
-					<li>
-						<span>
-						<b>From:</b> kampala 
-						<b>To</b>: Mbaraza
-						</span>
-						<span>
-						<b>Driver</b>:henry
-						</span>
-						<span>
-						<b>Depature time</b>:15th june 2018 9:00am 
-						</span>
-						<p class="desc">This is the description of the journey</p>
-					</li>
-					<li>
-						<span>
-						<b>From:</b> kasese 
-						<b>To</b>: Lira
-						</span>
-						<span>
-						<b>Driver</b>:Mike
-						</span>
-						<span>
-						<b>Depature time</b>:17th june 2018 9:00am 
-						</span>
-						<p class="desc">This is the description of the journey</p>
-					</li>
-					<li>
-						<span>
-						<b>From:</b> kampala 
-						<b>To</b>: Mbaraza
-						</span>
-						<span>
-						<b>Driver</b>:Tony
-						</span>
-						<span>
-						<b>Depature time</b>:15th june 2018 9:00am 
-						</span>
-						<p class="desc">This is the description of the journey</p>
-					</li>
-					
-				</ul>
+			<ul class="trips_list" id="taken_rides">
+			</ul>
 		</div>
 
-		<!-- The Modal -->
-		<div id="myModal" class="modal">
-
-		  <!-- Modal content -->
-			<div class="modal-content">
-			  <div class="modal-header">
-			    <span class="close">&times;</span>
-			    
-			  </div>
-			  <div class="modal-body">
-			    <h3>New Friend Requests</h3>
-			    
-				<ul class="requests">
-					<li><span>Kato Mike</span>
-					<span>
-						<a href="#" class="button green approve">Accept</a>
-						<a href="#" class="button blue decline">Reject</a>
-					</span>
-					</li>
-					<li><span>Kato Mike</span>
-					<span >
-						<a href="#" class="button green approve">Accept</a>
-						<a href="#" class="button blue decline">Reject</a>
-					</span>
-					</li>
-					<li><span>Kato Mike</span>
-					<span>
-						<a href="#" class="button green approve">Accept</a>
-						<a href="#" class="button blue decline">Reject</a>
-					</span>
-					</li>
-				</ul>
-
-			  </div>
-			  <div class="modal-footer">
-			  	<a class="button green close_btn" onclick="close_modal()">Close</a>
-
-			  </div>
-			</div>
-
-		</div>
 
 	</div>
-	
+
 	<footer> </footer>
-	
+
 
 </body>
+<script type="text/javascript" src="assets/js/global.js"></script>
+<script type="text/javascript" src="assets/js/cookies.js"></script>
+
 <script type="text/javascript">
-	
-	// Get the modal
-var modal = document.getElementById('myModal');
 
-// Get the button that opens the modal
-var btn = document.getElementById("myBtn");
-
-// Get the <span> element that closes the modal
-var span = document.getElementsByClassName("close")[0];
-
-// When the user clicks on the button, open the modal 
-
-
-function open_model(){
-	modal.style.display = "block";
+window.onload = function(){
+	fetch_my_trips();
 }
 
-function close_modal(){
-	modal.style.display = "none";
+
+function fetch_my_trips(){
+	var url=SERVER_PATH+"api/v1/mytrips";
+	fetch(url,{
+		method:"GET",
+		headers: {
+			'Content-Type': 'application/json',
+			'authorization':'Bearer '+get_cookie('auth_token')
+			}
+	})
+	.then(function(response){
+		return response.json()
+	})
+	.then(function(data){
+		// console.log("data ",data)
+		if(data.status=="success"){
+			var users_offers=data.my_rides
+
+			offers_list=""
+			for(var i=0; i<users_offers.length; i++){
+
+					temp_ride="<li>"+
+											"<span>"+
+											"<b>From: </b>"+users_offers[i]["origin"]+
+											"</span>"+
+											"<span>"+
+											"<b>To</b>: "+users_offers[i]["destination"]+
+											"</span>"+
+											"<span>"+
+											"<b>Depature time</b>: "+users_offers[i]["departure_time"]+
+											"</span>"+
+											"<p class='desc'>"+users_offers[i]["description"]+"</p>"+
+										"</li>";
+
+			 offers_list=offers_list+temp_ride;
+			}
+			document.getElementById("offered_rides_count").innerHTML=users_offers.length
+			document.getElementById("offered_rides").innerHTML=offers_list
+
+			var users_requests=data.my_requests
+
+			requests_list=""
+			for(var i=0; i<users_requests.length; i++){
+
+					temp_request="<li>"+
+												"<span>"+
+												"<b>From:</b> "+users_requests[i]["origin"]+
+												"<b> To</b>: "+users_requests[i]["destination"]+
+												"</span>"+
+												"<span>"+
+												"<b>Driver</b>:"+users_requests[i]["owner_name"]+
+												"</span>"+
+												"<span>"+
+												"<b>Depature time</b>:"+users_requests[i]["departure_time"]+
+												"</span>"+
+												"<p class='desc'>"+users_requests[i]["description"]+"</p>"+
+											"</li>";
+			 requests_list=requests_list+temp_request;
+			}
+			document.getElementById("taken_rides_count").innerHTML=users_requests.length
+			document.getElementById("taken_rides").innerHTML=requests_list
+
+		}
+	})
+	.catch(function(error){
+		console.log("error",error)
+	})
 }
 
-// When the user clicks on <span> (x), close the modal
-span.onclick = function() {
-    modal.style.display = "none";
-}
 
-// When the user clicks anywhere outside of the modal, close it
-window.onclick = function(event) {
-    if (event.target == modal) {
-        modal.style.display = "none";
-    }
-}
 </script>
 
 </html>
