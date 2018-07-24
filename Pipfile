@@ -15,6 +15,7 @@ pytest = "==3.6.1"
 coverage-badge = "==0.2.0"
 gunicorn = "==19.8.1"
 "psycopg2" = "==2.7.5"
+flask-cors = "==3.0.6"
 flask-jwt-extended = "==3.10.0"
 
 [dev-packages]

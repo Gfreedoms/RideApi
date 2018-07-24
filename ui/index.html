@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- to take up the width of the device-->
+	<link rel="stylesheet" type="text/css" href="assets/css/styles.css">
+</head>
+<body >
+	<header>
+		<a href="index.html" class="header-logo">Ride My Way</a>
+
+		<nav>
+			<ul>
+				<li><a href="index.html">Home</a></li>
+				<li><a href="trips.html">My Trips</a></li>
+				<li><a href="friends.html">Friends</a></li>
+				<li><a href="profile.html">Profile</a></li>
+			</ul>
+			<a href="#" class="header-right button green white-text" onclick="show_post_form()" >New Ride</a>
+			<a href="signup.html" class="header-right">Signup</a>
+			<a href="login.html" class="header-right2">Byarugaba S (Log Out)</a>
+		</nav>
+
+	</header>
+
+	<div class="container">
+
+		<div class="index-left-div" id="index-left-div">
+			<div class="search_div">
+				<center><h3>Searh Ride Offer</h3></center>
+				<form method="post" action="">
+					<div class="form-row"><!-- start form row  -->
+						<div class="label-col">
+							<label>From</label>
+						</div>
+						<div class="input-col">
+							<input class="form-input" type="text" name="search_from" id="search_from" />
+						</div>
+					</div>
+					<div class="form-row">
+						<div class="label-col">
+							<label>To</label>
+						</div>
+						<div class="input-col">
+							<input class="form-input" type="text" name="search_to" id="seearch_to" />
+						</div>
+					</div>
+
+					<div class="form-row">
+						<div class="label-col">
+							<label>Depature Date</label>
+						</div>
+						<div class="input-col">
+							<input class="form-input" type="text" placeholder="dd/mm/yyyy" name="search_date" id="search_date" />
+						</div>
+					</div>
+					<div class="form-row">
+						<div class="input-group">
+						<input class="button green" type="submit" name="search_ride" value="SEARCH" />
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+
+		<div class="right-div">
+
+			<div class="search_resuts" id="search_resuts">
+				<h3>Ride Offers</h3>
+				<ul class="trips_list" id="trips_list">
+
+					<li>
+						<span>
+						<b>From:</b> kampala
+						</span>
+						<span>
+						<b>To</b>: Mbaraza
+						</span>
+						<span>
+						<b>Depature time</b>:15th june 2018 9:00am
+						</span>
+						<p class="desc">This is the description of the journey</p>
+						<a href="" class="button blue">Send Request</a>
+					</li>
+
+				</ul>
+			</div>
+
+		<div class="post_offer_div" id="post_offer_div">
+			<center><h3>Post Ride Offer</h3></center>
+			<form class="post_offer" id="post_offer_form" method="post" action="#"
+			 onsubmit="return validate_ride_post()" >
+
+				<div class="form-row"><!-- start form row  -->
+					<div class="label-col">
+						<label>From</label>
+					</div>
+					<div class="input-col">
+						<span id="from_error" class="error"></span>
+						<input class="form-input" type="text" name="from" id="from" />
+					</div>
+				</div>
+
+				<div class="form-row">
+					<div class="label-col">
+						<label>To</label>
+					</div>
+					<div class="input-col">
+						<span id="to_error" class="error"></span>
+						<input class="form-input" type="text" name="to" id="to" />
+					</div>
+				</div>
+
+				<div class="form-row">
+					<div class="label-col">
+						<label>Depature Date</label>
+					</div>
+					<div class="input-col">
+						<span id="date_error" class="error"></span>
+						<input class="form-input" type="text" placeholder="yyyy-mm-dd hh:mm" name="date" id="date" />
+					</div>
+				</div>
+
+				<div class="form-row">
+					<div class="label-col">
+						<label>No. Free Seats</label>
+					</div>
+					<div class="input-col">
+						<span id="spots_error" class="error"></span>
+						<input class="form-input" type="text" placeholder="4" name="spots" id="spots"  />
+					</div>
+				</div>
+
+				<div class="form-row">
+					<div class="label-col">
+						<label>Description</label>
+					</div>
+					<div class="input-col">
+						<span id="description_error" class="error"></span>
+						<textarea class="input-text" rows="5" name="description" id="description"></textarea>
+					</div>
+				</div>
+
+				<div class="form-row">
+					<div class="input-group">
+						<input type="submit" class="button blue" value="OFFER"  />
+					</div>
+				</div><!--end form row-->
+			</form>
+		</div>
+		</div>
+
+
+	</div>
+
+	<footer> </footer>
+
+
+</body>
+<script type="text/javascript" src="assets/js/global.js"></script>
+<script type="text/javascript" src="assets/js/main.js"></script>
+<script type="text/javascript" src="assets/js/formvalidation.js"></script>
+<script type="text/javascript" src="assets/js/cookies.js"></script>
+
+<script type="text/javascript">
+	window.onload = function(){
+		initialise();
+		initialise_index_validations();
+
+		fetch_all_rides();
+
+		post_offer_form=document.getElementById("post_offer_form")
+		if(post_offer_form.addEventListener){
+		    post_offer_form.addEventListener("submit", post_ride_offer, false);
+		}else if(post_offer_form.attachEvent){
+		    post_offer_form.attachEvent('onsubmit', post_ride_offer);
+		}
+
+ 	}
+
+	function post_ride_offer(e){
+		if(validate_ride_post()){
+			e.preventDefault();
+			var url=SERVER_PATH+"api/v1/users/rides";
+			fetch(url,{
+				method: 'POST',
+					headers: {
+						'Content-Type': 'application/json',
+						'authorization':'Bearer '+get_cookie("auth_token")
+					},
+				body:JSON.stringify({
+					"origin":document.getElementById("from").value,
+					"destination":document.getElementById("to").value,
+					"departure_time":document.getElementById("date").value,
+					"slots":document.getElementById("spots").value,
+					"description":document.getElementById("description").value
+					})
+			})
+			.then(function(response){
+				return response.json()
+			})
+			.then(function(data){
+
+				if(data.status=="success"){
+					alert("Ride Created");
+					// window.location.href = "index.html";
+				}else{
+					error_label=document.getElementById("server_error");
+					error_label.style.visibility='visible';
+					error_label.textContent=data.message
+					console.log("Data ",data.message)
+				}
+			})
+			.catch(function(error){
+				console.log("Error ",error)
+			})
+
+		}
+	}
+
+	function fetch_all_rides(){
+		var url=SERVER_PATH+"api/v1/rides";
+		fetch(url,{
+
+					method: 'GET',
+						headers: {
+							'Content-Type': 'application/json',
+							'authorization':'Bearer '+get_cookie('auth_token')
+							}
+				})
+		.then(function(response){
+			return response.json()
+		})
+		.then(function(data){
+
+			if(data.status=="success"){
+				//store token and redirect
+				console.log("data ",data);
+				rides=data.rides;
+				rides_list=""
+				for(var i=0; i<rides.length; i++){
+					temp_ride="<li>"+
+										"<span>"+
+										"<b>From:</b> "+rides[i]["origin"]+
+										"</span>"+
+										"<span>"+
+										"<b>To</b>: "+rides[i]["destination"]+
+										"</span>"+
+										"<span>"+
+										"<b>Depature time</b>: "+rides[i]["departure_time"]+
+										"</span>"+
+										"<p class='desc'>"+rides[i]["description"]+"</p>"+
+										"<a href='#' onclick='request_ride_join("+rides[i]["ride_id"]+")' class='button blue'>Send Request</a>"+
+										"</li>";
+
+				 rides_list=rides_list+temp_ride;
+				}
+				document.getElementById("trips_list").innerHTML=rides_list
+			}else{
+				console.log("Data ",data.message)
+			}
+		})
+		.catch(function(error){
+			console.log("Error ",error)
+		})
+	}
+
+	function request_ride_join(ride_id){
+		var url=SERVER_PATH+"api/v1/rides/"+ride_id+"/requests";
+
+		fetch(url,{
+					method: 'POST',
+						headers: {
+							'Content-Type': 'application/json',
+							'authorization':'Bearer '+get_cookie('auth_token')
+							}
+				})
+		.then(function(response){
+			return response.json()
+		})
+		.then(function(data){
+			alert(data.message);
+
+		})
+		.catch(function(error){
+			console.log("error",error);
+		})
+
+
+	}
+
+
+</script>
+</html>

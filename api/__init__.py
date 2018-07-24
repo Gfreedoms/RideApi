@@ -7,10 +7,12 @@ from api.views.my_trips import MyTrips
 from api.database.database_handler import DataBaseConnection
 from flask import Flask, jsonify
 from flask_restful import Api
+from flask_cors import CORS
 from flask_jwt_extended import JWTManager
 from api.settings import config
 
 app = Flask(__name__)
+CORS(app)
 api = Api(app)
 
 app.config['JWT_SECRET_KEY'] = config.SECRET_KEY
