@@ -7,15 +7,24 @@ class DataBaseConnection:
     def __init__(self, database=None):
             try:
                 if database:
-                    self.connection = psycopg2.connect(database=database, user="postgres", password="",
-                                                       host="localhost",
+                    self.connection = psycopg2.connect(database=database, user="mczhkqyutgspud",
+                                                       password="bc4506c9ca483df2d1756d8fecebdc9" +
+                                                                "095df6593414ac3e85b7962f019252600",
+                                                       host="ec2-23-23-248-192.compute-1.amazonaws.com",
                                                        port="5432")
                 else:
                     if current_app.config["TESTING"]:
-                        self.connection = psycopg2.connect(database=current_app.config["TEST_DATABASE"], user="postgres", password="", host="localhost", port="5432")
+                        self.connection = psycopg2.connect(database=current_app.config["TEST_DATABASE"], user="ucbqtxsiwvfoyw",
+                                                           password="12085cfa573cb6e106d198baae33" +
+                                                                    "02839719753a1f7c2c519dc743e92e7661eb",
+                                                           host="ec2-23-23-248-192.compute-1.amazonaws.com",
+                                                           port="5432")
                     else:
-                        self.connection = psycopg2.connect(database=current_app.config["DATABASE"], user="postgres", password="",
-                                                           host="localhost",
+
+                        self.connection = psycopg2.connect(database=current_app.config["DATABASE"], user="mczhkqyutgspud",
+                                                           password="bc4506c9ca483df2d1756d8fecebdc9" +
+                                                                    "095df6593414ac3e85b7962f019252600",
+                                                           host="ec2-23-23-248-192.compute-1.amazonaws.com",
                                                            port="5432")
 
                 self.connection.autocommit = True
@@ -116,5 +125,5 @@ class DataBaseConnection:
 
 
 if __name__ == "__main__":
-    db_connection = DataBaseConnection("myway")
+    db_connection = DataBaseConnection("dbl39rci502hrl")
     db_connection.create_tables()
