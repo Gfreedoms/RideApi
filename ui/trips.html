@@ -12,11 +12,9 @@
 			<ul>
 				<li><a href="index.html">Home</a></li>
 				<li><a href="trips.html">My Trips</a></li>
-				<li><a href="friends.html">Friends</a></li>
 				<li><a href="profile.html">Profile</a></li>
 			</ul>
-
-			<a href="login.html" class="header-right2">Byarugaba S (Log Out)</a>
+			<a href="#" class="header-right2" onclick="log_out()"><span id="logged_user"></span> (Log Out)</a>
 		</nav>
 
 	</header>
@@ -46,7 +44,7 @@
 
 
 			<h3>Ride Requests</h3>
-			<p>This section contains rides that you requested to join another Driver's ride.</p>
+			<p>This section contains rides that you requested to join. These are other Drivers' rides.</p>
 			<table>
 				<thead>
 					<tr>
@@ -123,7 +121,9 @@
 	}
 
 	window.onload = function(){
+		show_user();
 		fetch_my_trips();
+
  	}
 
 	function fetch_ride_requests(ride_id){

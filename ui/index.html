@@ -13,12 +13,10 @@
 			<ul>
 				<li><a href="index.html">Home</a></li>
 				<li><a href="trips.html">My Trips</a></li>
-				<li><a href="friends.html">Friends</a></li>
 				<li><a href="profile.html">Profile</a></li>
 			</ul>
 			<a href="#" class="header-right button green white-text" onclick="show_post_form()" >New Ride</a>
-			<a href="signup.html" class="header-right">Signup</a>
-			<a href="login.html" class="header-right2">Byarugaba S (Log Out)</a>
+			<a href="#" class="header-right2" onclick="log_out()"><span id="logged_user"></span> (Log Out)</a>
 		</nav>
 
 	</header>
@@ -152,7 +150,7 @@
 	window.onload = function(){
 		initialise();
 		initialise_index_validations();
-
+		show_user();
 		fetch_all_rides();
 
 		post_offer_form=document.getElementById("post_offer_form")
@@ -161,9 +159,9 @@
 		}else if(post_offer_form.attachEvent){
 		    post_offer_form.attachEvent('onsubmit', post_ride_offer);
 		}
-
-
  	}
+
+
 
 	//requests functions
 	function post_ride_offer(e){

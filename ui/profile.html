@@ -13,28 +13,27 @@
 			<ul>
 				<li><a href="index.html">Home</a></li>
 				<li><a href="trips.html">My Trips</a></li>
-				<li><a href="friends.html">Friends</a></li>
 				<li><a href="profile.html">Profile</a></li>
 			</ul>
-			<a href="login.html" class="header-right2">Byarugaba S (Log Out)</a>
+			<a href="#" class="header-right2" onclick="log_out()"><span id="logged_user"></span> (Log Out)</a>
 		</nav>
 
 	</header>
 
 	<div class="container">
 			<div>
-				<h3>Account user: Byarugaba stephen</h3>
+				<h3>Account user: <span id="current_user"></span></h3>
 			</div>
 			<div class="users-left">
 
-			<p class="count" id="offered_rides_count">2</p>
+			<p class="count" id="offered_rides_count">0</p>
 
 			<h3>Rides You have offered </h3>
 			<ul class="trips_list" id="offered_rides">
 			</ul>
 		</div>
 		<div class="users-right">
-			<p class="count grn"><span id="taken_rides_count">3</span></p>
+			<p class="count grn"><span id="taken_rides_count">0</span></p>
 			<h3>Rides you have Taken </h3>
 
 			<ul class="trips_list" id="taken_rides">
@@ -54,6 +53,9 @@
 <script type="text/javascript">
 
 window.onload = function(){
+	show_user();
+  name=get_cookie("users_name");
+  document.getElementById("current_user").innerHTML=name
 	fetch_my_trips();
 }
 

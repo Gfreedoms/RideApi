@@ -13,7 +13,6 @@
 		<div class="login-div">
 			<p class="app-title">Ride My Way</p>
 			<label id="server_error" class="error"></label>
-
 			<form class="login-form" id="login_form" name="login" onsubmit="return validate_login()" method="post" action="#" >
 				<div class="input-group">
 					<label>Email <span id="email_error" class="error"></span></label>
@@ -28,9 +27,9 @@
 				</div>
 			</form>
 
-
-			<p>Don't Have an Account? <u><a href="signup.html">Sign up</a></u></p>
-
+			<div class="input-group">
+				<p>Don't Have an Account? <u><a href="signup.html">Sign up</a></u></p>
+			</div>
 		</div>
 	</div>
 </body>
@@ -71,11 +70,11 @@
 				return response.json()
 			})
 			.then(function(data){
-
+				console.log("Data ",data)
 				if(data.status=="success"){
 					//store token and redirect
 					create_cookie("auth_token",data.auth_token,1);
-
+					create_cookie("users_name",data.users_name,1);
 					window.location.href = "index.html";
 				}else{
 					error_label=document.getElementById("server_error");
