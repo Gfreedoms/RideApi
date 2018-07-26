@@ -69,20 +69,6 @@
 				<h3>Ride Offers</h3>
 				<ul class="trips_list" id="trips_list">
 
-					<li>
-						<span>
-						<b>From:</b> kampala
-						</span>
-						<span>
-						<b>To</b>: Mbaraza
-						</span>
-						<span>
-						<b>Depature time</b>:15th june 2018 9:00am
-						</span>
-						<p class="desc">This is the description of the journey</p>
-						<a href="" class="button blue">Send Request</a>
-					</li>
-
 				</ul>
 			</div>
 
@@ -158,9 +144,9 @@
 
 </body>
 <script type="text/javascript" src="assets/js/global.js"></script>
+<script type="text/javascript" src="assets/js/cookies.js"></script>
 <script type="text/javascript" src="assets/js/main.js"></script>
 <script type="text/javascript" src="assets/js/formvalidation.js"></script>
-<script type="text/javascript" src="assets/js/cookies.js"></script>
 
 <script type="text/javascript">
 	window.onload = function(){
@@ -176,8 +162,10 @@
 		    post_offer_form.attachEvent('onsubmit', post_ride_offer);
 		}
 
+
  	}
 
+	//requests functions
 	function post_ride_offer(e){
 		if(validate_ride_post()){
 			e.preventDefault();
