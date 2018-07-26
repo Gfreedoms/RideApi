@@ -34,6 +34,6 @@ class LoginUser(Resource):
                 expires = datetime.timedelta(days=1)
                 auth_token = create_access_token(identity=user_data['user_id'], expires_delta=expires)
                 return {"status": "success", "message": "successful login",
-                        "auth_token": auth_token}, 200
+                        "auth_token": auth_token,"users_name": user_data["name"]}, 200
 
         return {"status": "fail", "message": "Unauthorised Access. Invalid email or password"}, 401

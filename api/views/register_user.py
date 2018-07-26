@@ -9,7 +9,7 @@ class RegisterUser(Resource):
     """RegisterUser extends Resource class methods post for creating a new user"""
     def post(self):
         """RideResource2 extends Resource class methods post for creating a ride join request"""
-        
+
         parser = reqparse.RequestParser()
         parser.add_argument('name', type=str, required=True, help="name is required")
         parser.add_argument('email', type=str, required=True, help="email is required")
@@ -35,7 +35,7 @@ class RegisterUser(Resource):
             return {"status": "fail", "message": "Password mismatch"}, 400
 
         user_data = User.get_user_by_email(data["email"])
-        
+
         if not user_data:
             user = User(None, data["name"], data["email"], data["password"], data["confirm"])
             user.create_user()
@@ -44,10 +44,9 @@ class RegisterUser(Resource):
 
             if get_user:
                 expires = datetime.timedelta(days=1)
-
+                
                 auth_token = create_access_token(identity=get_user['user_id'], expires_delta=expires)
                 return {"auth_token": auth_token, "status": "success",
-                        "message": "account created"}, 201
+                        "message": "account created", "users_name": data["name"]}, 201
 
         return {"status": "fail", "message": "email already taken"}, 409
-
