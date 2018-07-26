@@ -31,7 +31,18 @@ function get_cookie(name){
 
 }
 
+function show_user(){
+  name=get_cookie("users_name");
+  document.getElementById("logged_user").innerHTML=name;
+  auth_token=get_cookie("auth_token");
+    if(auth_token=="" || auth_token==" "){
+      window.location.href = "login.html";
+    }
+}
 
-function eraseCookie(name) {
-    document.cookie = name+'=; Max-Age=-99999999;';
+function log_out(){
+   create_cookie("auth_token","",1);
+   create_cookie("users_name","",1);
+
+   show_user();
 }
