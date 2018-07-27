@@ -10,7 +10,7 @@ install:
 services:
   - postgresql
 before_script:
-  - psql -c 'create database myway;' -U postgres
+  # - psql -c 'create database myway;' -U postgres
   - psql -c 'create database myway_test;' -U postgres
   - cd api/database
   - python database_handler.py
@@ -20,4 +20,3 @@ script:
     - coverage report
 after_success:
     - coveralls
-   

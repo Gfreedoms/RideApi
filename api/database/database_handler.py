@@ -14,10 +14,9 @@ class DataBaseConnection:
                                                        port="5432")
                 else:
                     if current_app.config["TESTING"]:
-                        self.connection = psycopg2.connect(database=current_app.config["TEST_DATABASE"], user="ucbqtxsiwvfoyw",
-                                                           password="12085cfa573cb6e106d198baae33" +
-                                                                    "02839719753a1f7c2c519dc743e92e7661eb",
-                                                           host="ec2-23-23-248-192.compute-1.amazonaws.com",
+                        self.connection = psycopg2.connect(database=current_app.config["TEST_DATABASE"], user="postgres",
+                                                           password="",
+                                                           host="localhost",
                                                            port="5432")
                     else:
 
@@ -95,7 +94,7 @@ class DataBaseConnection:
                 message text,
                 FOREIGN KEY (user_id)
                     REFERENCES users (user_id)
-                    ON UPDATE CASCADE ON DELETE CASCADE 
+                    ON UPDATE CASCADE ON DELETE CASCADE
             )
             """
         )
@@ -105,7 +104,7 @@ class DataBaseConnection:
 
     def drop_test_tables(self):
         queries = ("""
-                DROP TABLE IF EXISTS users cascade 
+                DROP TABLE IF EXISTS users cascade
                 """,
                 """
                 DROP TABLE IF EXISTS rides cascade
