@@ -7,20 +7,23 @@ class DataBaseConnection:
     def __init__(self, database=None):
             try:
                 if database:
-                    self.connection = psycopg2.connect(database=database, user="mczhkqyutgspud",
+                    self.connection = psycopg2.connect(database=database,
+                                                       user="mczhkqyutgspud",
                                                        password="bc4506c9ca483df2d1756d8fecebdc9" +
                                                                 "095df6593414ac3e85b7962f019252600",
                                                        host="ec2-23-23-248-192.compute-1.amazonaws.com",
                                                        port="5432")
                 else:
                     if current_app.config["TESTING"]:
-                        self.connection = psycopg2.connect(database=current_app.config["TEST_DATABASE"], user="postgres",
+                        self.connection = psycopg2.connect(database=current_app.config["TEST_DATABASE"],
+                                                           user="postgres",
                                                            password="",
                                                            host="localhost",
                                                            port="5432")
                     else:
 
-                        self.connection = psycopg2.connect(database=current_app.config["DATABASE"], user="mczhkqyutgspud",
+                        self.connection = psycopg2.connect(database=current_app.config["DATABASE"],
+                                                           user="mczhkqyutgspud",
                                                            password="bc4506c9ca483df2d1756d8fecebdc9" +
                                                                     "095df6593414ac3e85b7962f019252600",
                                                            host="ec2-23-23-248-192.compute-1.amazonaws.com",
@@ -74,15 +77,15 @@ class DataBaseConnection:
                 message text, FOREIGN KEY (user_id) REFERENCES users (user_id)
                 ON UPDATE CASCADE ON DELETE CASCADE
             )
-            """ )
+            """)
 
         for query in queries:
             self.cursor.execute(query)
 
     def drop_test_tables(self):
 
-        query="DROP TABLE IF EXISTS {0} CASCADE"
-        tables = ["users","rides","ride_requests","friend_requests","notifications"]
+        query = "DROP TABLE IF EXISTS {0} CASCADE"
+        tables = ["users", "rides", "ride_requests", "friend_requests", "notifications"]
 
         for table in tables:
             self.cursor.execute(query.format(table))

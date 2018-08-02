@@ -18,7 +18,6 @@ class Request:
         self.requestor_name = requestor_name
 
 
-
 class Ride:
 
     def __init__(self, ride_id=None, user_id=None, origin=None,
