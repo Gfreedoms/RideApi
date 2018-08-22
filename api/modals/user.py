@@ -48,8 +48,7 @@ class User:
             row = cursor.fetchone()
             offers = []
             while row:
-                temp_ride = Ride(row["ride_id"], row["user_id"], row["origin"], row["destination"],
-                                 row["departure_time"].strftime("%Y-%m-%d %H:%M:%S"), row["slots"], row["description"])
+                temp_ride = Ride.create_ride_instance(row)
                 row = cursor.fetchone()
                 offers.append(temp_ride.__dict__)
             return offers
@@ -72,8 +71,7 @@ class User:
             row = dict_cursor.fetchone()
             requests = []
             while row:
-                ride = Ride(row["ride_id"], row["owner_id"], row["origin"], row["destination"],
-                            row["departure_time"].strftime("%Y-%m-%d %H:%M:%S"), row["slots"], row["description"])
+                ride = Ride.create_ride_instance(row)
 
                 temp_request = Request(ride, row["request_id"], row["requestor_id"], row["owner"], row["requestor"],
                                        row["status"])

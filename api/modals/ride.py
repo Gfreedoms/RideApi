@@ -18,7 +18,6 @@ class Request:
         self.requestor_name = requestor_name
 
 
-
 class Ride:
 
     def __init__(self, ride_id=None, user_id=None, origin=None,
@@ -49,6 +48,12 @@ class Ride:
             return None
 
     @staticmethod
+    def create_ride_instance(row):
+        temp_ride = Ride(row["ride_id"], row["user_id"], row["origin"], row["destination"],
+                         row["departure_time"].strftime("%Y-%m-%d %H:%M:%S"), row["slots"], row["description"])
+        return temp_ride
+
+    @staticmethod
     def get_all_rides():
         query_string = """
                      SELECT * FROM rides
@@ -62,8 +67,7 @@ class Ride:
             db_rides = []
 
             while row:
-                temp_ride = Ride(row["ride_id"], row["user_id"], row["origin"], row["destination"],
-                                 row["departure_time"].strftime("%Y-%m-%d %H:%M:%S"), row["slots"], row["description"])
+                temp_ride = Ride.create_ride_instance(row)
 
                 row = cursor.fetchone()
                 db_rides.append(temp_ride.__dict__)
@@ -164,10 +168,10 @@ class Ride:
             row = dict_cursor.fetchone()
             requests = []
             while row:
-                ride = Ride(row["ride_id"], row["owner_id"], row["origin"], row["destination"],
-                            row["departure_time"].strftime("%Y-%m-%d %H:%M:%S"), row["slots"], row["description"])
+                ride = Ride.create_ride_instance(row)
 
-                temp_request = Request(ride, row["request_id"], row["requestor_id"], row["owner"], row["requestor"], row["status"])
+                temp_request = Request(ride, row["request_id"], row["requestor_id"], row["owner"],
+                                       row["requestor"], row["status"])
 
                 requests.append(temp_request.__dict__)
                 row = dict_cursor.fetchone()
