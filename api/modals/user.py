@@ -1,5 +1,5 @@
 from api.database.database_handler import DataBaseConnection
-from api.modals.ride import Ride, Request
+from api.modals.ride import Ride
 
 
 class User:
@@ -73,8 +73,7 @@ class User:
             while row:
                 ride = Ride.create_ride_instance(row)
 
-                temp_request = Request(ride, row["request_id"], row["requestor_id"], row["owner"], row["requestor"],
-                                       row["status"])
+                temp_request = Ride.create_request_instance(ride, row)
 
                 requests.append(temp_request.__dict__)
                 row = dict_cursor.fetchone()

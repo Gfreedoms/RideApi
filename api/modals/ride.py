@@ -54,6 +54,13 @@ class Ride:
         return temp_ride
 
     @staticmethod
+    def create_request_instance(single_ride,row):
+        temp_request = Request(single_ride, row["request_id"], row["requestor_id"], row["owner"],
+                row["requestor"], row["status"])
+
+        return temp_request
+
+    @staticmethod
     def get_all_rides():
         query_string = """
                      SELECT * FROM rides
@@ -170,8 +177,7 @@ class Ride:
             while row:
                 ride = Ride.create_ride_instance(row)
 
-                temp_request = Request(ride, row["request_id"], row["requestor_id"], row["owner"],
-                                       row["requestor"], row["status"])
+                temp_request = Ride.create_request_instance(ride, row)
 
                 requests.append(temp_request.__dict__)
                 row = dict_cursor.fetchone()
