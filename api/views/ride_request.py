@@ -41,11 +41,18 @@ class RideRequest(Resource):
 
         missing_fields = helpers.check_missing_field(["status"], [data["status"]])
 
+        error_found = False
+
         if missing_fields:
-            return {"message": missing_fields}, 400
+            error_found = True
+            message = missing_fields
 
         if not helpers.validate_status(data["status"]):
-            return {"message": "wrong status, accepted values are 'accepted' or 'rejected' "}, 400
+            error_found = True
+            message = "wrong status, accepted values are 'accepted' or 'rejected'"
+
+        if error_found:
+            return {"status": "fail", "message": message}, 400
 
         user_id = get_jwt_identity()
 
