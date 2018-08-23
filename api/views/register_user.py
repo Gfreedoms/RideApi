@@ -1,4 +1,4 @@
-from api.modals.user import User1
+from api.modals.user import User
 from flask_restful import Resource, reqparse
 import datetime
 from flask_jwt_extended import create_access_token
@@ -34,13 +34,13 @@ class RegisterUser(Resource):
         if data["password"] != data["confirm"]:
             return {"status": "fail", "message": "Password mismatch"}, 400
 
-        user_data = User1.get_user_by_email(data["email"])
+        user_data = User.get_user_by_email(data["email"])
 
         if not user_data:
-            user = User1(None, data["name"], data["email"], data["password"], data["confirm"])
+            user = User(name=data["name"], email=data["email"], password=data["password"], confirm=data["confirm"])
             user.create_user()
 
-            get_user = User1.get_user_by_email(data["email"])
+            get_user = User.get_user_by_email(data["email"])
 
             if get_user:
                 expires = datetime.timedelta(days=1)

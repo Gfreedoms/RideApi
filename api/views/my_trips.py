@@ -1,4 +1,4 @@
-from api.modals.user import User1
+from api.modals.user import User
 from flask_restful import Resource
 from flask_jwt_extended import jwt_required, get_jwt_identity
 
@@ -12,7 +12,7 @@ class MyTrips(Resource):
 
         user_id = get_jwt_identity()
 
-        user = User1(user_id)
+        user = User(id=user_id)
         user_rides = user.my_offers()
 
         user_requests = user.my_requests()

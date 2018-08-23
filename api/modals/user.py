@@ -2,16 +2,15 @@ from api.database.database_handler import DataBaseConnection
 from api.modals.ride import Ride
 
 
-class User1:
+class User:
     """User class defines the methods needed by user and the attributes.
         on creation pass in id,name,email,password"""
 
-    def __init__(self, _id=None, name=None, email=None, password=None, confirm=None):
-        self.id = _id
-        self.name = name
-        self.email = email
-        self.password = password
-        self.confirm = confirm
+    def __init__(self, **kwargs):
+
+        allowed_keys = set(['id', 'name', 'email', 'password', 'confirm'])
+        self.__dict__.update((key, None) for key in allowed_keys)
+        self.__dict__.update((key, value) for key, value in kwargs.items() if key in allowed_keys)
 
     def create_user(self):
         connection = DataBaseConnection()

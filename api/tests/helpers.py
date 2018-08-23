@@ -1,16 +1,17 @@
 import datetime
 import json
-from api.modals.user import User1
+from api.modals.user import User
 from api.modals.ride import Ride
 import re
 
-valid_user = User1(None, "stephen", "sample1@mail.com", "123", "123")
-user_with_missing_values = User1()
-user_with_malformed_email = User1(None, "stephen2", "sample1mail.com", "123", "123")
-second_valid_user = User1(None, "stephen", "sample2@mail.com", "333", "333")
+valid_user = User(name="stephen", email="sample1@mail.com", password="123", confirm="123")
 
-user_with_wrong_password = User1(None, "", "sample1@mail.com", "344", "")
-different_passwords_user = User1(None, "stephen", "sample1@mail.com", "hhd", "hhd2")
+user_with_missing_values = User()
+user_with_malformed_email = User(name="stephen2", email="", password="123", confirm="123")
+second_valid_user = User(name="stephen", email="sample2@mail.com", password="333", confirm="333")
+
+user_with_wrong_password = User(name="", email="sample1@mail.com", password="344", confirm="")
+different_passwords_user = User(name="stephen", email="sample1@mail.com", password="hhd", confirm="hhd2")
 
 valid_ride = Ride(origin="masaka", destination="mbale", departure_time="2018-06-10 13:00",
                   slots=3, description="This is just a sample request")
