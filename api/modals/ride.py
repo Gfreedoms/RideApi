@@ -3,20 +3,23 @@ from api.database.database_handler import DataBaseConnection
 
 
 class Request:
-    def __init__(self, ride, request_id, requestor_id, owner_name, requestor_name, status):
+    def __init__(self, ride, **kwargs):
+
+        # all those keys will be initialized as class attributes
+        allowed_keys = set(['request_id', 'requestor_id', 'owner_name', 'requestor_name', 'status'])
+
+        # initialize all allowed keys to false
+        self.__dict__.update((key, None) for key in allowed_keys)
+        # and update the given keys by their given values
+        self.__dict__.update((key, value) for key, value in kwargs.items() if key in allowed_keys)
 
         self.ride_id = ride.ride_id
-        self.request_id = request_id
-        self.status = status
-        self.requestor_id = requestor_id
         self.origin = ride.origin
         self.destination = ride.destination
         self.departure_time = ride.departure_time
         self.slots = ride.slots
         self.description = ride.description
         self.owner_id = ride.user_id
-        self.owner_name = owner_name
-        self.requestor_name = requestor_name
 
 
 class Ride:
@@ -56,8 +59,8 @@ class Ride:
 
     @staticmethod
     def create_request_instance(single_ride, row):
-        temp_request = Request(single_ride, row["request_id"], row["requestor_id"], row["owner"],
-                row["requestor"], row["status"])
+        temp_request = Request(single_ride, request_id=row["request_id"], requestor_id=row["requestor_id"],
+                               owner_name=row["owner"], requestor_name=row["requestor"], status=row["status"])
 
         return temp_request
 
