@@ -2,7 +2,7 @@ from api.database.database_handler import DataBaseConnection
 from api.modals.ride import Ride
 
 
-class User:
+class User1:
     """User class defines the methods needed by user and the attributes.
         on creation pass in id,name,email,password"""
 

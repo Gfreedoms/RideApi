@@ -4,8 +4,9 @@ from api.database.database_handler import DataBaseConnection
 
 class Request:
     def __init__(self, ride, request_id, requestor_id, owner_name, requestor_name, status):
-        self.request_id = request_id
+
         self.ride_id = ride.ride_id
+        self.request_id = request_id
         self.status = status
         self.requestor_id = requestor_id
         self.origin = ride.origin
@@ -20,15 +21,15 @@ class Request:
 
 class Ride:
 
-    def __init__(self, ride_id=None, user_id=None, origin=None,
-                 destination=None, departure_time=None, slots=None, description=None):
-        self.ride_id = ride_id
-        self.user_id = user_id
-        self.origin = origin
-        self.destination = destination
-        self.departure_time = departure_time
-        self.slots = slots
-        self.description = description
+    def __init__(self, **kwargs):
+
+        # all those keys will be initialized as class attributes
+        allowed_keys = set(['ride_id', 'user_id', 'origin', 'destination', 'departure_time', 'slots', 'description'])
+
+        # initialize all allowed keys to false
+        self.__dict__.update((key, None) for key in allowed_keys)
+        # and update the given keys by their given values
+        self.__dict__.update((key, value) for key, value in kwargs.items() if key in allowed_keys)
 
     def create_ride(self):
         query_string = """
@@ -49,12 +50,12 @@ class Ride:
 
     @staticmethod
     def create_ride_instance(row):
-        temp_ride = Ride(row["ride_id"], row["user_id"], row["origin"], row["destination"],
-                         row["departure_time"].strftime("%Y-%m-%d %H:%M:%S"), row["slots"], row["description"])
+        temp_ride = Ride(ride_id=row["ride_id"], user_id=row["user_id"], origin=row["origin"], destination=row["destination"],
+                         departure_time=row["departure_time"].strftime("%Y-%m-%d %H:%M:%S"), slots=row["slots"], description=row["description"])
         return temp_ride
 
     @staticmethod
-    def create_request_instance(single_ride,row):
+    def create_request_instance(single_ride, row):
         temp_request = Request(single_ride, row["request_id"], row["requestor_id"], row["owner"],
                 row["requestor"], row["status"])
 

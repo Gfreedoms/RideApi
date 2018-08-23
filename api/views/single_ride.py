@@ -10,7 +10,7 @@ class SingleRide(Resource):
     @jwt_required
     def get(self, ride_id):
         """returns a ride matching a given id"""
-        ride = Ride(ride_id, None, None, None, None, None, None)
+        ride = Ride(ride_id=ride_id)
         row = ride.get_ride()
 
         if row:
@@ -53,7 +53,8 @@ class SingleRide(Resource):
             return {"status": "fail", "message:": "slots must be int"}, 400
 
         user_id = get_jwt_identity()
-        temp_ride = Ride(None, user_id, data["origin"], data["destination"], data["departure_time"], data["slots"], data["description"])
+        temp_ride = Ride(user_id=user_id, origin=data["origin"], destination=data["destination"],
+                         departure_time=data["departure_time"], slots=data["slots"], description=data["description"])
 
         ride_id = temp_ride.create_ride()
 

@@ -1,4 +1,4 @@
-from api.modals.user import User
+from api.modals.user import User1
 from flask_restful import Resource, reqparse
 import datetime
 from flask_jwt_extended import create_access_token
@@ -26,7 +26,7 @@ class LoginUser(Resource):
         if not helpers.validate_email(data["email"]):
             return {"message:": "Invalid email"}, 400
 
-        user_data = User.get_user_by_email(data["email"])
+        user_data = User1.get_user_by_email(data["email"])
 
         if user_data:
             if user_data["password"] == data["password"]:
