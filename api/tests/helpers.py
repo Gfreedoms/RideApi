@@ -6,7 +6,7 @@ import re
 
 valid_user = User(name="stephen", email="sample1@mail.com", password="123", confirm="123")
 
-user_with_missing_values = User()
+user_with_missing_values = User(email="sample1@mail.com")
 user_with_malformed_email = User(name="stephen2", email="", password="123", confirm="123")
 second_valid_user = User(name="stephen", email="sample2@mail.com", password="333", confirm="333")
 
@@ -115,7 +115,7 @@ def validate_status(status):
 
 
 def validate_email(email):
-    if not re.match(r"[^@]+@[^@]+\.[^@]+", email):
+    if not re.match(r"[^@]+@[^@]+\.[^@]+", email, flags=0):
         return False
     else:
         return True
