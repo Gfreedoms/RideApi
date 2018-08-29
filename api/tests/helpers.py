@@ -6,6 +6,23 @@ import re
 
 valid_user = User(name="stephen", email="sample1@mail.com", password="123", confirm="123")
 
+
+user_data_longer_name = User(name="""In a professional context it often happens that private or 
+                                    corporate clients corder a publication to be made and presented
+                                    with the actual content still not being ready. Think of a news 
+                                    blog that's filled with content hourly on the day of going live.
+                                    However, reviewers tend to be distracted by comprehensible content, 
+                                    say, a random text copied from a newspaper or the internet. """,
+                             email="sample1@mail.com", password="123", confirm="123")
+
+user_data_longer_email = User(name="stephen", email="""In a professional context it often happens that private or 
+                                    corporate clients corder a publication to be made and presented
+                                    with the actual content still not being ready. Think of a news 
+                                    blog that's filled with content hourly on the day of going live.
+                                    However, reviewers tend to be distracted by comprehensible content, 
+                                    say, a random text copied from a newspaper or the internet.@mail.com""",
+                              password="123", confirm="123")
+
 user_with_missing_values = User(email="sample1@mail.com")
 user_with_malformed_email = User(name="stephen2", email="", password="123", confirm="123")
 second_valid_user = User(name="stephen", email="sample2@mail.com", password="333", confirm="333")
@@ -15,6 +32,16 @@ different_passwords_user = User(name="stephen", email="sample1@mail.com", passwo
 
 valid_ride = Ride(origin="masaka", destination="mbale", departure_time="2018-06-10 13:00",
                   slots=3, description="This is just a sample request")
+
+ride_with_long_origin_value = Ride(
+                                origin="""In a professional context it often happens that private or 
+                                    corporate clients corder a publication to be made and presented
+                                    with the actual content still not being ready. Think of a news 
+                                    blog that's filled with content hourly on the day of going live.
+                                    However, reviewers tend to be distracted by comprehensible content, 
+                                    say, a random text copied from a newspaper or the internet.@mail.com""",
+                                destination="mbale", departure_time="2018-06-10 13:00",
+                                slots=3, description="This is just a sample request")
 
 missing_values_ride = Ride()
 
@@ -137,7 +164,7 @@ def validate_email(email):
 def validate_date(date_txt):
     try:
         if date_txt:
-            datetime.datetime.strptime(date_txt,'%Y-%m-%d %H:%M')
+            datetime.datetime.strptime(date_txt, '%Y-%m-%d %H:%M')
             return True
         else:
             return False

@@ -28,6 +28,18 @@ class TestRide(unittest.TestCase):
         self.assertTrue(data["auth_token"])
         self.assertEqual(register_response.status_code, 201)
 
+    def test_register_user_with_long_name(self):
+        register_response = helpers.register_user(self, helpers.user_data_longer_name)
+        data = json.loads(register_response.data.decode())
+        self.assertTrue(data["status"] == "fail")
+        self.assertEqual(register_response.status_code, 400)
+
+    def test_register_user_with_long_email(self):
+        register_response = helpers.register_user(self, helpers.user_data_longer_email)
+        data = json.loads(register_response.data.decode())
+        self.assertTrue(data["status"] == "fail")
+        self.assertEqual(register_response.status_code, 400)
+
     def test_register_mismatch_password(self):
 
         register_response = helpers.register_user(self, helpers.different_passwords_user)
@@ -84,6 +96,18 @@ class TestRide(unittest.TestCase):
 
         self.assertTrue(post_ride_data["status"] == "success")
         self.assertEqual(post_ride_response.status_code, 201)
+
+    def test_post_ride_offer_with_long_origin(self):
+
+        register_response = helpers.register_user(self, helpers.valid_user)
+        register_data = json.loads(register_response.data.decode())
+
+        post_ride_response = helpers.post_ride_offer(self, register_data["auth_token"], helpers.ride_with_long_origin_value)
+
+        post_ride_data = json.loads(post_ride_response.data.decode())
+
+        self.assertTrue(post_ride_data["status"] == "fail")
+        self.assertEqual(post_ride_response.status_code, 400)
 
     def test_ride_with_missing_values(self):
         register_response = helpers.register_user(self, helpers.valid_user)
