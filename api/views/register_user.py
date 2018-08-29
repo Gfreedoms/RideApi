@@ -22,11 +22,17 @@ class RegisterUser(Resource):
             [data["name"], data["email"], data["password"], data["confirm"]]
         )
 
+        length_violations = helpers.check_length_restrictions(["name", "email"], [data["name"], data["email"]])
+
         error_found = False
 
         if missing_fields:
             error_found = True
             message = missing_fields
+
+        if length_violations:
+            error_found = True
+            message = length_violations
 
         if data["name"]:
             if not data["name"].isalpha():

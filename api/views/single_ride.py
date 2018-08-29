@@ -43,14 +43,31 @@ class SingleRide(Resource):
             [data["origin"], data["destination"], data["departure_time"], data["slots"], data["description"]]
         )
 
+        length_violations = helpers.check_length_restrictions(["origin", "destination",
+                                                               "departure_time", "description"],
+                                                              [data["origin"], data["destination"],
+                                                               data["departure_time"], data["description"]])
+
+        error_found = False
+
+        if length_violations:
+            error_found = True
+            message = length_violations
+
         if missing_fields:
-            return {"status": "fail", "message:": missing_fields}, 400
+            error_found = True
+            message = missing_fields
 
         if not helpers.validate_date(data["departure_time"]):
-            return {"status": "fail", "message:": "Incorrect data format, should be YYYY-MM-DD HH:MM"}, 400
+            error_found = True
+            message = "Incorrect data format, should be YYYY-MM-DD HH:MM"
 
         if not helpers.convert_to_int(data["slots"]):
-            return {"status": "fail", "message:": "slots must be int"}, 400
+            error_found = True
+            message = "slots must be int"
+
+        if error_found:
+            return {"status": "fail", "message:": message}, 400
 
         user_id = get_jwt_identity()
         temp_ride = Ride(user_id=user_id, origin=data["origin"], destination=data["destination"],

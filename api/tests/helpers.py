@@ -107,6 +107,19 @@ def check_missing_field(fields, values):
         return False
 
 
+def check_length_restrictions(fields, values):
+    message = []
+    for i in range(0, len(fields)):
+
+        if values[i] and len(values[i]) > 255:
+            ans = fields[i] + "'s max length is 255 characters"
+            message.append(ans)
+    if message:
+        return ' , '.join(message)
+    else:
+        return False
+
+
 def validate_status(status):
     if status.lower() == "accepted" or status.lower() == "rejected":
         return True
@@ -123,15 +136,21 @@ def validate_email(email):
 
 def validate_date(date_txt):
     try:
-        datetime.datetime.strptime(date_txt, '%Y-%m-%d %H:%M')
-        return True
+        if date_txt:
+            datetime.datetime.strptime(date_txt,'%Y-%m-%d %H:%M')
+            return True
+        else:
+            return False
     except ValueError:
         return False
 
 
 def convert_to_int(value):
     try:
-        int(value)
-        return True
+        if value:
+            int(value)
+            return True
+        else:
+            return False
     except ValueError:
         return False
